@@ -22,6 +22,11 @@ public partial class MainWindow : Form
         CancelButton1.Click += CancelButton_Click;
 
         Images.View = View.Details;
+        Images.Columns.Clear();
+        Images.Columns.Add("File Name", 200);
+        Images.Columns.Add("Status", 100);
+        Images.Columns.Add("Progress", 80);
+        Images.Columns.Add("Message", 250);
     }
 
     private void SettingsButton_Click(object sender, EventArgs e)
@@ -104,6 +109,18 @@ public partial class MainWindow : Form
         }
     }
 
+    /// <summary>
+    /// Initiates the image processing workflow by preparing a task queue, creating worker threads,
+    /// and handling the processing of each image in the input folder list. The progress bar will
+    /// display the progress as the tasks are completed. Event handlers are attached to monitor the
+    /// status of individual tasks (started, completed, or failed). This method executes asynchronously.
+    /// </summary>
+    /// <remarks>
+    /// This method will verify that both input and output folders are specified, and that there are
+    /// images to process. It utilizes a cancellation token to handle potential interruptions during
+    /// the processing workflow. The number of worker threads is determined by the MaxThreads setting
+    /// in the ProcessingSettings configuration.
+    /// </remarks>
     private async void StartProcessing()
     {
         _cancellationTokenSource = new CancellationTokenSource();
@@ -142,6 +159,11 @@ public partial class MainWindow : Form
         await Task.WhenAll(workerTasks);
     }
 
+    /// <summary>
+    /// Handles the event signaling that an image task has started processing.
+    /// Updates the corresponding ListView item to reflect the "Processing" status.
+    /// </summary>
+    /// <param name="task">The image task that has started processing, containing details such as input and output file paths.</param>
     private void OnTaskStarted(ImageTask task)
     {
         if (InvokeRequired)
@@ -157,6 +179,12 @@ public partial class MainWindow : Form
         }
     }
 
+    /// <summary>
+    /// Handles the completion of an image processing task by updating the UI to reflect the completed status,
+    /// including the task's progress, status, and success message. The progress bar is incremented to represent
+    /// the completion of the task.
+    /// </summary>
+    /// <param name="task">The image task that has been completed. Contains information about the file paths for the input image and output image.</param>
     private void OnTaskCompleted(ImageTask task)
     {
         if (InvokeRequired)
@@ -194,6 +222,14 @@ public partial class MainWindow : Form
         progressBar1.Value++;
     }
 
+    /// <summary>
+    /// Searches the ListView for an item that matches the specified file path.
+    /// This method iterates through all the items in the ListView and checks their tags for a match.
+    /// </summary>
+    /// <param name="filePath">The file path to search for within the ListView items' tags.</param>
+    /// <returns>
+    /// The ListViewItem that matches the specified file path, or null if no match is found.
+    /// </returns>
     private ListViewItem? FindListViewItem(string filePath)
     {
         foreach (ListViewItem item in Images.Items)

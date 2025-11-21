@@ -34,19 +34,15 @@ partial class MainWindow
         InputButton = new System.Windows.Forms.Button();
         OutputButton = new System.Windows.Forms.Button();
         Images = new System.Windows.Forms.ListView();
-        File_name = new System.Windows.Forms.ColumnHeader();
-        Status = new System.Windows.Forms.ColumnHeader();
-        Progress = new System.Windows.Forms.ColumnHeader();
-        Message = new System.Windows.Forms.ColumnHeader();
         StartButton = new System.Windows.Forms.Button();
         ClearButton = new System.Windows.Forms.Button();
         CancelButton1 = new System.Windows.Forms.Button();
         progressBar1 = new System.Windows.Forms.ProgressBar();
         label1 = new System.Windows.Forms.Label();
         SuspendLayout();
-        //
+        // 
         // SettingsButton
-        //
+        // 
         SettingsButton.BackColor = System.Drawing.Color.Aqua;
         SettingsButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)238));
         SettingsButton.Location = new System.Drawing.Point(22, 185);
@@ -56,9 +52,9 @@ partial class MainWindow
         SettingsButton.Text = "Settings";
         SettingsButton.UseVisualStyleBackColor = false;
         SettingsButton.Click += SettingsButton_Click;
-        //
+        // 
         // WelcomeSign
-        //
+        // 
         WelcomeSign.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)238));
         WelcomeSign.Location = new System.Drawing.Point(219, 12);
         WelcomeSign.Name = "WelcomeSign";
@@ -67,9 +63,9 @@ partial class MainWindow
         WelcomeSign.TabIndex = 1;
         WelcomeSign.Text = "Welcome to mass image editor";
         WelcomeSign.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-        //
+        // 
         // InputButton
-        //
+        // 
         InputButton.BackColor = System.Drawing.SystemColors.InactiveCaption;
         InputButton.Location = new System.Drawing.Point(22, 97);
         InputButton.Name = "InputButton";
@@ -77,9 +73,9 @@ partial class MainWindow
         InputButton.TabIndex = 2;
         InputButton.Text = "Choose folder with images ...";
         InputButton.UseVisualStyleBackColor = false;
-        //
+        // 
         // OutputButton
-        //
+        // 
         OutputButton.BackColor = System.Drawing.SystemColors.ActiveCaption;
         OutputButton.Location = new System.Drawing.Point(237, 97);
         OutputButton.Name = "OutputButton";
@@ -87,42 +83,18 @@ partial class MainWindow
         OutputButton.TabIndex = 3;
         OutputButton.Text = "Choose folder to output the processed images.";
         OutputButton.UseVisualStyleBackColor = false;
-        //
+        // 
         // Images
-        //
-        Images.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { File_name, Status, Progress, Message });
+        // 
         Images.GridLines = true;
         Images.Location = new System.Drawing.Point(457, 104);
         Images.Name = "Images";
         Images.Size = new System.Drawing.Size(597, 504);
         Images.TabIndex = 4;
         Images.UseCompatibleStateImageBehavior = false;
-        //
-        // File_name
-        //
-        File_name.DisplayIndex = 3;
-        File_name.Name = "File_name";
-        File_name.Width = 250;
-        //
-        // Status
-        //
-        Status.DisplayIndex = 0;
-        Status.Name = "Status";
-        Status.Width = 250;
-        //
-        // Progress
-        //
-        Progress.DisplayIndex = 1;
-        Progress.Name = "Progress";
-        //
-        // Message
-        //
-        Message.DisplayIndex = 2;
-        Message.Name = "Message";
-        Message.Width = 250;
-        //
+        // 
         // StartButton
-        //
+        // 
         StartButton.BackColor = System.Drawing.Color.FromArgb(((int)((byte)0)), ((int)((byte)192)), ((int)((byte)0)));
         StartButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)238));
         StartButton.Location = new System.Drawing.Point(237, 185);
@@ -131,9 +103,9 @@ partial class MainWindow
         StartButton.TabIndex = 5;
         StartButton.Text = "Start process";
         StartButton.UseVisualStyleBackColor = false;
-        //
+        // 
         // ClearButton
-        //
+        // 
         ClearButton.BackColor = System.Drawing.Color.FromArgb(((int)((byte)0)), ((int)((byte)192)), ((int)((byte)0)));
         ClearButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)238));
         ClearButton.Location = new System.Drawing.Point(22, 267);
@@ -142,9 +114,9 @@ partial class MainWindow
         ClearButton.TabIndex = 7;
         ClearButton.Text = "Clear";
         ClearButton.UseVisualStyleBackColor = false;
-        //
+        // 
         // CancelButton1
-        //
+        // 
         CancelButton1.BackColor = System.Drawing.Color.Red;
         CancelButton1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)238));
         CancelButton1.Location = new System.Drawing.Point(237, 267);
@@ -153,25 +125,25 @@ partial class MainWindow
         CancelButton1.TabIndex = 8;
         CancelButton1.Text = "Cancel";
         CancelButton1.UseVisualStyleBackColor = false;
-        //
+        // 
         // progressBar1
-        //
+        // 
         progressBar1.Location = new System.Drawing.Point(22, 367);
         progressBar1.Name = "progressBar1";
         progressBar1.Size = new System.Drawing.Size(403, 33);
         progressBar1.TabIndex = 9;
-        //
+        // 
         // label1
-        //
+        // 
         label1.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)238));
         label1.Location = new System.Drawing.Point(22, 328);
         label1.Name = "label1";
         label1.Size = new System.Drawing.Size(151, 36);
         label1.TabIndex = 10;
         label1.Text = "Progress";
-        //
+        // 
         // MainWindow
-        //
+        // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         ClientSize = new System.Drawing.Size(1068, 622);
@@ -200,13 +172,7 @@ partial class MainWindow
 
     private System.Windows.Forms.Button ClearButton;
 
-    private System.Windows.Forms.ColumnHeader File_name;
-
     private System.Windows.Forms.Button StartButton;
-
-    private System.Windows.Forms.ColumnHeader Status;
-    private System.Windows.Forms.ColumnHeader Progress;
-    private System.Windows.Forms.ColumnHeader Message;
 
     private System.Windows.Forms.ListView Images;
 
