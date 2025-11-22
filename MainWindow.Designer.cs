@@ -39,6 +39,8 @@ partial class MainWindow
         CancelButton1 = new System.Windows.Forms.Button();
         progressBar1 = new System.Windows.Forms.ProgressBar();
         label1 = new System.Windows.Forms.Label();
+        ExitBtn = new System.Windows.Forms.Button();
+        ChosenFoldersLabel = new System.Windows.Forms.Label();
         SuspendLayout();
         // 
         // SettingsButton
@@ -142,11 +144,30 @@ partial class MainWindow
         label1.TabIndex = 10;
         label1.Text = "Progress";
         // 
+        // ExitBtn
+        // 
+        ExitBtn.Location = new System.Drawing.Point(41, 464);
+        ExitBtn.Name = "ExitBtn";
+        ExitBtn.Size = new System.Drawing.Size(169, 62);
+        ExitBtn.TabIndex = 11;
+        ExitBtn.Text = "Exit";
+        ExitBtn.UseVisualStyleBackColor = true;
+        // 
+        // ChosenFoldersLabel
+        // 
+        ChosenFoldersLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)238));
+        ChosenFoldersLabel.Location = new System.Drawing.Point(22, 58);
+        ChosenFoldersLabel.Name = "ChosenFoldersLabel";
+        ChosenFoldersLabel.Size = new System.Drawing.Size(1032, 36);
+        ChosenFoldersLabel.TabIndex = 12;
+        // 
         // MainWindow
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         ClientSize = new System.Drawing.Size(1068, 622);
+        Controls.Add(ChosenFoldersLabel);
+        Controls.Add(ExitBtn);
         Controls.Add(label1);
         Controls.Add(progressBar1);
         Controls.Add(CancelButton1);
@@ -162,13 +183,15 @@ partial class MainWindow
         PerformLayout();
     }
 
+    private System.Windows.Forms.Label ChosenFoldersLabel;
+
     private System.Windows.Forms.Label label1;
 
     private System.Windows.Forms.ProgressBar progressBar1;
 
     private System.Windows.Forms.Button CancelButton1;
 
-    private System.Windows.Forms.Button button1;
+    private System.Windows.Forms.Button ExitBtn;
 
     private System.Windows.Forms.Button ClearButton;
 

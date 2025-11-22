@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using MassImageEditor.Core;
 
 namespace MassImageEditor;
@@ -20,6 +21,7 @@ public partial class MainWindow : Form
         StartButton.Click += StartButton_Click;
         ClearButton.Click += ClearButton_Click;
         CancelButton1.Click += CancelButton_Click;
+        ExitBtn.Click += ExitBtn_Click;
 
         Images.View = View.Details;
         Images.Columns.Clear();
@@ -44,6 +46,7 @@ public partial class MainWindow : Form
         {
             _inputFolder = folderDialog.SelectedPath;
             LoadImagesFromFolder(_inputFolder);
+            ChosenFoldersLabel.Text += $"Chosen input folder: {_inputFolder}";
         }
     }
 
@@ -55,6 +58,7 @@ public partial class MainWindow : Form
         if (folderDialog.ShowDialog() == DialogResult.OK)
         {
             _outputFolder = folderDialog.SelectedPath;
+            ChosenFoldersLabel.Text += $", Chosen output folder: {_outputFolder}";
         }
     }
 
@@ -83,6 +87,7 @@ public partial class MainWindow : Form
         _inputFolder = null;
         _outputFolder = null;
         progressBar1.Value = 0;
+        ChosenFoldersLabel.Text = "";
     }
 
     private void CancelButton_Click(object? sender, EventArgs e)
@@ -157,6 +162,8 @@ public partial class MainWindow : Form
         // Start all workers
         var workerTasks = _workers.Select(w => w.StartAsync()).ToArray();
         await Task.WhenAll(workerTasks);
+        string output = Path.Combine(_outputFolder!);
+        Process.Start("explorer.exe", output);
     }
 
     /// <summary>
@@ -238,5 +245,10 @@ public partial class MainWindow : Form
                 return item;
         }
         return null;
+    }
+
+    private void ExitBtn_Click(object? sender, EventArgs e)
+    {
+        Close();
     }
 }

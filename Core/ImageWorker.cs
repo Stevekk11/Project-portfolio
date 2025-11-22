@@ -41,7 +41,7 @@ public sealed class ImageWorker
     {
         while (!_taskQueue.IsCompleted && !_cancellationToken.IsCancellationRequested)
         {
-            ImageTask? task = null;
+            ImageTask? task;
 
             try
             {
@@ -65,7 +65,6 @@ public sealed class ImageWorker
             {
                 TaskStarted?.Invoke(task);
 
-                // TODO: Replace this with real image processing logic.
                 ProcessImage(task);
 
                 TaskCompleted?.Invoke(task);
