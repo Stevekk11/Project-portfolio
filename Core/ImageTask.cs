@@ -15,3 +15,4 @@ public sealed class ImageTask
         OutputPath = outputPath;
     }
 }
+//Copyright 2025
