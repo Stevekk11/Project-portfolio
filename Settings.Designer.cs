@@ -45,6 +45,7 @@ partial class Settings
         label3 = new System.Windows.Forms.Label();
         label4 = new System.Windows.Forms.Label();
         ExitButton = new System.Windows.Forms.Button();
+        BlackAndWhiteBox = new System.Windows.Forms.CheckBox();
         PerformanceGroupBox.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)MaxThreadsChooser).BeginInit();
         SuspendLayout();
@@ -182,11 +183,21 @@ partial class Settings
         ExitButton.UseVisualStyleBackColor = false;
         ExitButton.Click += ExitButton_Click;
         // 
+        // BlackAndWhiteBox
+        // 
+        BlackAndWhiteBox.Location = new System.Drawing.Point(23, 234);
+        BlackAndWhiteBox.Name = "BlackAndWhiteBox";
+        BlackAndWhiteBox.Size = new System.Drawing.Size(192, 27);
+        BlackAndWhiteBox.TabIndex = 15;
+        BlackAndWhiteBox.Text = "Black and white output.";
+        BlackAndWhiteBox.UseVisualStyleBackColor = true;
+        // 
         // Settings
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         ClientSize = new System.Drawing.Size(800, 450);
+        Controls.Add(BlackAndWhiteBox);
         Controls.Add(ExitButton);
         Controls.Add(label4);
         Controls.Add(label3);
@@ -205,6 +216,8 @@ partial class Settings
         ResumeLayout(false);
         PerformLayout();
     }
+
+    private System.Windows.Forms.CheckBox BlackAndWhiteBox;
 
     private System.Windows.Forms.Button ExitButton;
 

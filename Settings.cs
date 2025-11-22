@@ -13,6 +13,12 @@ public partial class Settings : Form
         LoadSettings();
     }
 
+    /// <summary>
+    /// Loads the application settings for image processing into the corresponding UI components,
+    /// such as checkboxes, text boxes, combo boxes, and numeric up-down controls.
+    /// This method reflects the current configuration stored within the ProcessingSettings instance
+    /// into the UI, enabling the user to view and potentially modify these settings.
+    /// </summary>
     private void LoadSettings()
     {
         // Load resize settings
@@ -36,8 +42,16 @@ public partial class Settings : Form
 
         // Load performance settings
         MaxThreadsChooser.Value = _settings.MaxThreads;
+        //Black and white checkbox
+        BlackAndWhiteBox.Checked = _settings.BlackAndWhiteEnabled;
     }
 
+    /// <summary>
+    /// Saves the application settings related to image processing from the UI components
+    /// into the corresponding properties of the ProcessingSettings instance.
+    /// This method captures the current state of the UI, ensuring that user-defined
+    /// configuration changes are preserved for future operations.
+    /// </summary>
     private void SaveSettings()
     {
         // Save resize settings
@@ -71,6 +85,8 @@ public partial class Settings : Form
 
         // Save performance settings
         _settings.MaxThreads = (int)MaxThreadsChooser.Value;
+        //save black and white checkbox
+        _settings.BlackAndWhiteEnabled = BlackAndWhiteBox.Checked;
     }
 
     private void ResizeCheckBox_CheckedChanged(object sender, EventArgs e)

@@ -19,6 +19,8 @@ public sealed class ProcessingSettings
     public bool ConvertEnabled { get; set; }
     public string? ConvertToFormat { get; set; }
 
+    public bool BlackAndWhiteEnabled { get; set; }
+
     public int MaxThreads { get; set; } = 4;
 
     private ProcessingSettings()
