@@ -46,8 +46,12 @@ partial class Settings
         label4 = new System.Windows.Forms.Label();
         ExitButton = new System.Windows.Forms.Button();
         BlackAndWhiteBox = new System.Windows.Forms.CheckBox();
+        BrightnessBox = new System.Windows.Forms.CheckBox();
+        trackBar1 = new System.Windows.Forms.TrackBar();
+        label1 = new System.Windows.Forms.Label();
         PerformanceGroupBox.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)MaxThreadsChooser).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
         SuspendLayout();
         // 
         // ResizeCheckBox
@@ -192,11 +196,43 @@ partial class Settings
         BlackAndWhiteBox.Text = "Black and white output.";
         BlackAndWhiteBox.UseVisualStyleBackColor = true;
         // 
+        // BrightnessBox
+        // 
+        BrightnessBox.Location = new System.Drawing.Point(489, 66);
+        BrightnessBox.Name = "BrightnessBox";
+        BrightnessBox.Size = new System.Drawing.Size(145, 21);
+        BrightnessBox.TabIndex = 16;
+        BrightnessBox.Text = "Change brightness";
+        BrightnessBox.UseVisualStyleBackColor = true;
+        BrightnessBox.CheckedChanged += BrightnessBox_CheckedChanged;
+        // 
+        // trackBar1
+        // 
+        trackBar1.Enabled = false;
+        trackBar1.Location = new System.Drawing.Point(483, 93);
+        trackBar1.Maximum = 100;
+        trackBar1.Name = "trackBar1";
+        trackBar1.Size = new System.Drawing.Size(279, 45);
+        trackBar1.TabIndex = 17;
+        trackBar1.TickFrequency = 10;
+        trackBar1.Value = 50;
+        // 
+        // label1
+        // 
+        label1.Location = new System.Drawing.Point(489, 129);
+        label1.Name = "label1";
+        label1.Size = new System.Drawing.Size(299, 26);
+        label1.TabIndex = 18;
+        label1.Text = "0     10     20     30    40     50     60    70     80    90     100";
+        // 
         // Settings
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         ClientSize = new System.Drawing.Size(800, 450);
+        Controls.Add(label1);
+        Controls.Add(trackBar1);
+        Controls.Add(BrightnessBox);
         Controls.Add(BlackAndWhiteBox);
         Controls.Add(ExitButton);
         Controls.Add(label4);
@@ -213,9 +249,16 @@ partial class Settings
         Text = "Settings";
         PerformanceGroupBox.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)MaxThreadsChooser).EndInit();
+        ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
         ResumeLayout(false);
         PerformLayout();
     }
+
+    private System.Windows.Forms.Label label1;
+
+    private System.Windows.Forms.TrackBar trackBar1;
+
+    private System.Windows.Forms.CheckBox BrightnessBox;
 
     private System.Windows.Forms.CheckBox BlackAndWhiteBox;
 

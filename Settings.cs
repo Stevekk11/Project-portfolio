@@ -44,6 +44,9 @@ public partial class Settings : Form
         MaxThreadsChooser.Value = _settings.MaxThreads;
         //Black and white checkbox
         BlackAndWhiteBox.Checked = _settings.BlackAndWhiteEnabled;
+        // Brightness checkbox and value
+        BrightnessBox.Checked = _settings.BrightnessEnabled;
+        trackBar1.Value = _settings.BrightnessValue;
     }
 
     /// <summary>
@@ -87,6 +90,9 @@ public partial class Settings : Form
         _settings.MaxThreads = (int)MaxThreadsChooser.Value;
         //save black and white checkbox
         _settings.BlackAndWhiteEnabled = BlackAndWhiteBox.Checked;
+        //Save brightness checkbox and value
+        _settings.BrightnessEnabled = BrightnessBox.Checked;
+        _settings.BrightnessValue = trackBar1.Value;
     }
 
     private void ResizeCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -130,6 +136,18 @@ public partial class Settings : Form
         else
         {
             ConvertBox.Enabled = false;
+        }
+    }
+
+    private void BrightnessBox_CheckedChanged(object sender, EventArgs e)
+    {
+        if (BrightnessBox.Checked)
+        {
+            trackBar1.Enabled = true;
+        }
+        else
+        {
+            trackBar1.Enabled = false;
         }
     }
 }

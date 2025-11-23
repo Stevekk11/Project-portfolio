@@ -64,6 +64,11 @@ public sealed class ImageProcessorPipeline
         }
         //Add black and white processor
         pipeline.AddProcessor(new BlackAndWhiteProcessor(settings.BlackAndWhiteEnabled));
+        //Add brightness processor
+        if (settings.BrightnessEnabled)
+        {
+            pipeline.AddProcessor(new BrightnessProcessor(settings.BrightnessValue));
+        }
 
         return pipeline;
     }
