@@ -4,6 +4,9 @@ using System.Drawing;
 using MassImageEditor.Core.Processors;
 using NUnit.Framework;
 
+/// <summary>
+/// Contains unit tests for verifying the functionality of the ResizeProcessor class, focusing on resizing operations and aspect ratio preservation.
+/// </summary>
 public class ResizeTest
 {
     private Bitmap _landscape = null!;

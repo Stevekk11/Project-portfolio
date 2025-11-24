@@ -3,6 +3,15 @@ using MassImageEditor.Core;
 
 namespace MassImageEditor;
 
+/// <summary>
+/// Represents the main window for the MassImageEditor application.
+/// Provides a graphical user interface to manage and process image files in bulk.
+/// </summary>
+/// <remarks>
+/// This class handles the initialization of components, event handlers, and the configuration
+/// of controls such as buttons and ListView for functionality like selecting inputs, starting
+/// the processing, clearing operations, and exiting the application.
+/// </remarks>
 public partial class MainWindow : Form
 {
     private string? _inputFolder;

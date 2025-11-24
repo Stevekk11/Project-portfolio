@@ -2,6 +2,14 @@
 
 namespace MassImageEditor;
 
+/// <summary>
+/// Represents a settings window for configuring application-specific processing options.
+/// </summary>
+/// <remarks>
+/// This class is a partial class that extends the Form class. It serves as a user interface
+/// to load and manage processing settings using the singleton instance of <see cref="ProcessingSettings"/>.
+/// The window is initialized with default settings and provides a method for loading the settings.
+/// </remarks>
 public partial class Settings : Form
 {
     private readonly ProcessingSettings _settings;

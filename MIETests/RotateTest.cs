@@ -4,7 +4,9 @@ using System.Drawing;
 using MassImageEditor.Core.Processors;
 using NUnit.Framework;
 
-
+/// <summary>
+/// Contains unit tests for verifying the behavior of the RotateProcessor class.
+/// </summary>
 public class RotateTest
 {
     private Bitmap _source = null!;
