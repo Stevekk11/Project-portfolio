@@ -71,6 +71,7 @@ public partial class Settings : Form
         {
             _settings.Width = width;
         }
+
         if (int.TryParse(HeigthBox.Text, out int height))
         {
             _settings.Height = height;
@@ -103,6 +104,13 @@ public partial class Settings : Form
         _settings.BrightnessValue = trackBar1.Value;
     }
 
+    private bool ValidateDimensions(int? w, int? h)
+    {
+        if (_settings.ResizeEnabled)
+            return w > 0 && h > 0;
+        return true;
+    }
+
     private void ResizeCheckBox_CheckedChanged(object sender, EventArgs e)
     {
         if (ResizeCheckBox.Checked)
@@ -132,7 +140,14 @@ public partial class Settings : Form
     private void ExitButton_Click(object sender, EventArgs e)
     {
         SaveSettings();
-        this.Close();
+        if (ValidateDimensions(_settings.Width, _settings.Height))
+        {
+            Close();
+        }
+        else
+        {
+            MessageBox.Show("Width and height must be greater than zero.", "Invalid dimensions", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 
     private void Convert_CheckedChanged(object sender, EventArgs e)

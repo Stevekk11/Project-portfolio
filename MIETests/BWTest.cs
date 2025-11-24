@@ -4,6 +4,9 @@ using System.Drawing;
 using MassImageEditor.Core.Processors;
 using NUnit.Framework;
 
+/// <summary>
+/// Contains unit tests for the BlackAndWhiteProcessor class to verify its functionality.
+/// </summary>
 public class BWTest
 {
     private Bitmap _testImage = null!;
