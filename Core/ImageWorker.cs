@@ -1,4 +1,5 @@
 ﻿using MassImageEditor.Core.Processors;
+using Serilog;
 
 namespace MassImageEditor.Core;
 
@@ -58,6 +59,7 @@ public sealed class ImageWorker
             }
             catch (OperationCanceledException e)
             {
+                Log.Information("ImageWorker loop cancelled");
                 break;
             }
             catch(InvalidOperationException)

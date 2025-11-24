@@ -1,3 +1,5 @@
+using Serilog;
+
 namespace MassImageEditor;
 
 static class Program
@@ -8,10 +10,47 @@ static class Program
     [STAThread]
     static void Main()
     {
-        // To customize application configuration such as set high DPI settings or default font,
-        // see https://aka.ms/applicationconfiguration.
-        ApplicationConfiguration.Initialize();
-        Application.Run(new MainWindow());
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .WriteTo.File(
+                path: "../../../Logs/MassImageEditor-.log",
+                rollingInterval: RollingInterval.Day,
+                retainedFileCountLimit: 7,
+                rollOnFileSizeLimit: true,
+                shared: true)
+            .CreateLogger();
+
+        try
+        {
+            Log.Information("Application starting up");
+
+            ApplicationConfiguration.Initialize();
+
+            Application.ThreadException += (sender, args) =>
+            {
+                Log.Error(args.Exception, "Unhandled UI thread exception");
+                MessageBox.Show("An unexpected error occurred. See log for details.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            };
+
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+            {
+                var ex = args.ExceptionObject as Exception;
+                Log.Fatal(ex, "Unhandled non‑UI thread exception");
+            };
+
+            Application.Run(new MainWindow());
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Application terminated unexpectedly");
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
     }
 }
 

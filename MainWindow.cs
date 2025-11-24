@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using MassImageEditor.Core;
+using Serilog;
 
 namespace MassImageEditor;
 
@@ -121,6 +122,7 @@ public partial class MainWindow : Form
             item.Tag = file;
             Images.Items.Add(item);
         }
+        Log.Information("Images loaded from folder {FolderPath}", folderPath);
     }
 
     /// <summary>
@@ -218,8 +220,24 @@ public partial class MainWindow : Form
         }
 
         progressBar1.Value++;
+        Log.Information("Task completed for file {FilePath}", task.FilePath);
     }
 
+    /// <summary>
+    /// Handles the failure of a task during image processing by updating the user interface to reflect
+    /// the failure status. The associated ListView item is updated to display "Failed" as the status,
+    /// along with an error message indicating the specific issue. Updates the progress bar to reflect
+    /// the progress of completed tasks.
+    /// </summary>
+    /// <param name="task">The image processing task that failed.</param>
+    /// <param name="ex">The exception that caused the task failure, providing details about the error.</param>
+    /// <remarks>
+    /// If the exception is an OutOfMemoryException, it is assumed that the file is either invalid
+    /// or corrupted. For all other exceptions, the exception message is displayed in the corresponding
+    /// ListView item's details.
+    /// This method ensures thread safety when updating the user interface by invoking the failure
+    /// handler on the UI thread if the current thread is a background worker.
+    /// </remarks>
     private void OnTaskFailed(ImageTask task, Exception ex)
     {
         if (InvokeRequired)
@@ -232,9 +250,23 @@ public partial class MainWindow : Form
         if (item != null)
         {
             item.SubItems[1].Text = "Failed";
-            item.SubItems[3].Text = ex.Message;
-        }
 
+            string message;
+
+            // System.Drawing.Image.FromFile throws OutOfMemoryException
+            // when the file is not a valid image or is corrupted.
+            if (ex is OutOfMemoryException)
+            {
+                message = "Invalid or corrupted image file";
+            }
+            else
+            {
+                message = ex.Message;
+            }
+
+            item.SubItems[3].Text = message;
+        }
+        Log.Error(ex, "Task failed for file {FilePath}", task.FilePath);
         progressBar1.Value++;
     }
 

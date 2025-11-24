@@ -85,3 +85,6 @@ This project is a school project by Štěpán Végh (2025).
 
 ## Errors
 Out of memory - out of RAM
+Corrupted image - corrupted file
+## PlantUML Diagram
+![img.png](img.png)
