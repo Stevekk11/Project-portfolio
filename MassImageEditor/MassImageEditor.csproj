@@ -1,0 +1,30 @@
+﻿<!--
+  - Copyright (c) 2025. Štěpán Végh
+  -->
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net9.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWindowsForms>true</UseWindowsForms>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <IncludeAllContentForSelfExtract>false</IncludeAllContentForSelfExtract>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Update="Settings.cs">
+        <SubType>Form</SubType>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="NUnit" Version="4.4.0" />
+      <PackageReference Include="Serilog" Version="4.3.0" />
+      <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
+      <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    </ItemGroup>
+
+</Project>

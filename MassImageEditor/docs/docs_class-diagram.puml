@@ -1,0 +1,204 @@
+@startuml MassImageEditor Class Diagram
+
+' Styling
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam packageStyle rectangle
+
+package "UI Layer" {
+    class MainWindow {
+        - _inputFolder : string?
+        - _outputFolder : string?
+        - _taskQueue : ImageTaskQueue?
+        - _workers : List<ImageWorker>
+        - _cancellationTokenSource : CancellationTokenSource?
+        
+        + MainWindow()
+        - InputButton_Click(sender, e)
+        - OutputButton_Click(sender, e)
+        - StartButton_Click(sender, e)
+        - ClearButton_Click(sender, e)
+        - CancelButton_Click(sender, e)
+        - SettingsButton_Click(sender, e)
+        - LoadImagesFromFolder(folderPath : string)
+        - StartProcessing() : async void
+        - OnTaskStarted(task : ImageTask)
+        - OnTaskCompleted(task : ImageTask)
+        - OnTaskFailed(task : ImageTask, ex : Exception)
+        - FindListViewItem(filePath : string) : ListViewItem?
+        - ExitBtn_Click(sender, e)
+    }
+    
+    class Settings {
+        - _settings : ProcessingSettings
+        
+        + Settings()
+        - LoadSettings()
+        - SaveSettings()
+        - ResizeCheckBox_CheckedChanged(sender, e)
+        - Rotate_CheckedChanged(sender, e)
+        - Convert_CheckedChanged(sender, e)
+        - ExitButton_Click(sender, e)
+    }
+    
+    class Program {
+        + {static} Main() : void
+    }
+}
+
+package "Core" {
+    class ImageTask <<sealed>> {
+        + FilePath : string
+        + OutputPath : string
+        
+        + ImageTask(filePath : string, outputPath : string)
+    }
+    
+    class ImageTaskQueue <<sealed>> {
+        - _queue : BlockingCollection<ImageTask>
+        
+        + ImageTaskQueue(boundedCapacity : int = 100)
+        + Enqueue(task : ImageTask) : void
+        + Dequeue(cancellationToken : CancellationToken) : ImageTask
+        + CompleteAdding() : void
+        + IsCompleted : bool <<get>>
+    }
+    
+    class ImageWorker <<sealed>> {
+        - _taskQueue : ImageTaskQueue
+        - _cancellationToken : CancellationToken
+        - _pipeline : ImageProcessorPipeline
+        - _formatSaver : FormatSaver
+        
+        + TaskCompleted : Action<ImageTask>?
+        + TaskStarted : Action<ImageTask>?
+        + TaskFailed : Action<ImageTask, Exception>?
+        
+        + ImageWorker(taskQueue : ImageTaskQueue, cancellationToken : CancellationToken)
+        + StartAsync() : Task
+        - RunWorkerLoop() : void
+        - ProcessImage(task : ImageTask) : void
+    }
+    
+    class ProcessingSettings <<sealed>> <<singleton>> {
+        - {static} _instance : ProcessingSettings?
+        
+        + {static} Instance : ProcessingSettings <<get>>
+        + ResizeEnabled : bool
+        + Width : int?
+        + Height : int?
+        + RotateEnabled : bool
+        + RotationDegrees : int
+        + ConvertEnabled : bool
+        + ConvertToFormat : string?
+        + BlackAndWhiteEnabled : bool
+        + MaxThreads : int
+        
+        - ProcessingSettings()
+    }
+}
+
+package "Core.Processors" {
+    interface IImageProcessor {
+        + Process(image : Bitmap) : Bitmap
+        + ShouldProcess : bool <<get>>
+    }
+    
+    class ImageProcessorPipeline <<sealed>> {
+        - _processors : List<IImageProcessor>
+        
+        + AddProcessor(processor : IImageProcessor) : void
+        + Process(sourceImage : Bitmap) : Bitmap
+        + {static} CreateFromSettings(settings : ProcessingSettings) : ImageProcessorPipeline
+    }
+    
+    class ResizeProcessor <<sealed>> {
+        - _targetWidth : int
+        - _targetHeight : int
+        
+        + ResizeProcessor(targetWidth : int, targetHeight : int)
+        + Process(image : Bitmap) : Bitmap
+        + ShouldProcess : bool <<get>>
+    }
+    
+    class RotateProcessor <<sealed>> {
+        - _degrees : int
+        
+        + RotateProcessor(degrees : int)
+        + Process(image : Bitmap) : Bitmap
+        + ShouldProcess : bool <<get>>
+    }
+    
+    class BlackAndWhiteProcessor {
+        + BlackAndWhiteProcessor(shouldProcess : bool)
+        + Process(image : Bitmap) : Bitmap
+        + ShouldProcess : bool <<get>>
+    }
+    
+    class FormatSaver {
+        - _format : string
+        
+        + FormatSaver(format : string)
+        + Save(image : Bitmap, path : string) : void
+        + GetOutputPath(originalPath : string) : string
+        + ShouldConvert : bool <<get>>
+    }
+}
+
+' Relationships
+
+' UI Layer relationships
+Program --> MainWindow : creates
+MainWindow --> Settings : opens
+MainWindow ..> ImageTaskQueue : creates
+MainWindow ..> ImageWorker : creates *
+MainWindow ..> ImageTask : handles
+MainWindow ..> ProcessingSettings : reads
+Settings ..> ProcessingSettings : modifies
+
+' Core relationships
+ImageWorker --> ImageTaskQueue : dequeues from
+ImageWorker --> ImageTask : processes
+ImageWorker --> ImageProcessorPipeline : uses
+ImageWorker --> FormatSaver : uses
+ImageWorker ..> ProcessingSettings : reads
+
+ImageTaskQueue o-- ImageTask : contains *
+
+' Processor relationships
+IImageProcessor <|.. ResizeProcessor : implements
+IImageProcessor <|.. RotateProcessor : implements
+IImageProcessor <|.. BlackAndWhiteProcessor : implements
+
+ImageProcessorPipeline o-- IImageProcessor : contains *
+ImageProcessorPipeline ..> ProcessingSettings : reads
+
+ImageWorker --> IImageProcessor : uses via pipeline
+
+' Notes
+note right of ProcessingSettings
+    Singleton pattern
+    Stores global configuration
+end note
+
+note right of ImageTaskQueue
+    Thread-safe queue using
+    BlockingCollection<T>
+    Producer-Consumer pattern
+end note
+
+note right of ImageProcessorPipeline
+    Pipeline pattern
+    Processes images through
+    multiple processors sequentially
+end note
+
+note bottom of ImageWorker
+    Worker thread that:
+    1. Dequeues tasks
+    2. Processes images through pipeline
+    3. Saves results
+    4. Fires events for UI updates
+end note
+
+@enduml
