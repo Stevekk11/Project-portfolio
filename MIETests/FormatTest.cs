@@ -5,7 +5,9 @@ namespace MIETests;
 using System.Drawing;
 using MassImageEditor.Core.Processors;
 using NUnit.Framework;
-
+/// <summary>
+/// Unit tests for the FormatSaver class.
+/// </summary>
 public class FormatTest
 {
     private Bitmap _testBitmap = null!;
