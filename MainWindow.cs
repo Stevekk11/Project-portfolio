@@ -39,12 +39,25 @@ public partial class MainWindow : Form
         Images.Columns.Add("Status", 100);
         Images.Columns.Add("Progress", 80);
         Images.Columns.Add("Message", 250);
+        Images.ItemActivate += Images_ItemActivate;
     }
 
     private void SettingsButton_Click(object sender, EventArgs e)
     {
         Settings settings = new Settings();
         settings.ShowDialog();
+    }
+
+    private void Images_ItemActivate(object? sender, EventArgs e)
+    {
+        if (Images.SelectedItems.Count == 0)
+            return;
+        var selectedItem = Images.SelectedItems[0];
+        var filePath = selectedItem.Tag as string;
+        if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+            return;
+        using var preview = new ImagePreviewForm(filePath);
+        preview.ShowDialog();
     }
 
     private void InputButton_Click(object? sender, EventArgs e)
