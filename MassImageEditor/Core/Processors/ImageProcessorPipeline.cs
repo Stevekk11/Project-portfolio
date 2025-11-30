@@ -69,6 +69,11 @@ public sealed class ImageProcessorPipeline
         {
             pipeline.AddProcessor(new BrightnessProcessor(settings.BrightnessValue));
         }
+        //Add contrast processor
+        if (settings.ContrastEnabled)
+        {
+            pipeline.AddProcessor(new ContrastProcessor(settings.ContrastValue));
+        }
 
         return pipeline;
     }

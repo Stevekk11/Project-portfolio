@@ -49,9 +49,13 @@ partial class Settings
         BrightnessBox = new System.Windows.Forms.CheckBox();
         trackBar1 = new System.Windows.Forms.TrackBar();
         label1 = new System.Windows.Forms.Label();
+        ContrastCheckBox = new System.Windows.Forms.CheckBox();
+        ContrastTrackBar = new System.Windows.Forms.TrackBar();
+        label5 = new System.Windows.Forms.Label();
         PerformanceGroupBox.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)MaxThreadsChooser).BeginInit();
         ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)ContrastTrackBar).BeginInit();
         SuspendLayout();
         // 
         // ResizeCheckBox
@@ -205,7 +209,7 @@ partial class Settings
         BrightnessBox.Text = "Change brightness";
         BrightnessBox.UseVisualStyleBackColor = true;
         BrightnessBox.CheckedChanged += BrightnessBox_CheckedChanged;
-        //
+        // 
         // trackBar1
         // 
         trackBar1.Enabled = false;
@@ -225,11 +229,43 @@ partial class Settings
         label1.TabIndex = 18;
         label1.Text = "0     10     20     30    40     def.     60    70     80    90     100";
         // 
+        // ContrastCheckBox
+        // 
+        ContrastCheckBox.Location = new System.Drawing.Point(492, 167);
+        ContrastCheckBox.Name = "ContrastCheckBox";
+        ContrastCheckBox.Size = new System.Drawing.Size(173, 28);
+        ContrastCheckBox.TabIndex = 19;
+        ContrastCheckBox.Text = "Change contrast";
+        ContrastCheckBox.UseVisualStyleBackColor = true;
+        ContrastCheckBox.CheckedChanged += ContrastCheckBox_CheckedChanged;
+        // 
+        // ContrastTrackBar
+        // 
+        ContrastTrackBar.Enabled = false;
+        ContrastTrackBar.Location = new System.Drawing.Point(489, 215);
+        ContrastTrackBar.Maximum = 100;
+        ContrastTrackBar.Minimum = -100;
+        ContrastTrackBar.Name = "ContrastTrackBar";
+        ContrastTrackBar.Size = new System.Drawing.Size(283, 45);
+        ContrastTrackBar.TabIndex = 20;
+        ContrastTrackBar.TickFrequency = 20;
+        // 
+        // label5
+        // 
+        label5.Location = new System.Drawing.Point(492, 248);
+        label5.Name = "label5";
+        label5.Size = new System.Drawing.Size(299, 26);
+        label5.TabIndex = 21;
+        label5.Text = "0     10     20     30    40     def.     60    70     80    90     100";
+        // 
         // Settings
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         ClientSize = new System.Drawing.Size(800, 450);
+        Controls.Add(label5);
+        Controls.Add(ContrastTrackBar);
+        Controls.Add(ContrastCheckBox);
         Controls.Add(label1);
         Controls.Add(trackBar1);
         Controls.Add(BrightnessBox);
@@ -250,9 +286,16 @@ partial class Settings
         PerformanceGroupBox.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)MaxThreadsChooser).EndInit();
         ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
+        ((System.ComponentModel.ISupportInitialize)ContrastTrackBar).EndInit();
         ResumeLayout(false);
         PerformLayout();
     }
+
+    private System.Windows.Forms.Label label5;
+
+    private System.Windows.Forms.TrackBar ContrastTrackBar;
+
+    private System.Windows.Forms.CheckBox ContrastCheckBox;
 
     private System.Windows.Forms.Label label1;
 

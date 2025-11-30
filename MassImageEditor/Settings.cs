@@ -56,6 +56,7 @@ public partial class Settings : Form
         // Brightness checkbox and value
         BrightnessBox.Checked = _settings.BrightnessEnabled;
         trackBar1.Value = _settings.BrightnessValue;
+        ContrastTrackBar.Value = _settings.ContrastValue;
     }
 
     /// <summary>
@@ -103,6 +104,9 @@ public partial class Settings : Form
         //Save brightness checkbox and value
         _settings.BrightnessEnabled = BrightnessBox.Checked;
         _settings.BrightnessValue = trackBar1.Value;
+        //Save contrast checkbox and value
+        _settings.ContrastValue = ContrastTrackBar.Value;
+        _settings.ContrastEnabled = ContrastCheckBox.Checked;
     }
 
     private bool ValidateDimensions(int? w, int? h)
@@ -180,5 +184,17 @@ public partial class Settings : Form
         int processorCount = Environment.ProcessorCount;
         MaxThreadsChooser.Maximum = processorCount;
         MaxThreadsChooser.Value = processorCount;
+    }
+
+    private void ContrastCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        if (ContrastCheckBox.Checked)
+        {
+            ContrastTrackBar.Enabled = true;
+        }
+        else
+        {
+            ContrastTrackBar.Enabled = false;
+        }
     }
 }
