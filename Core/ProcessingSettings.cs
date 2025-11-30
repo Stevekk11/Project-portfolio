@@ -24,6 +24,8 @@ public sealed class ProcessingSettings
     public int MaxThreads { get; set; } = 4;
     public bool BrightnessEnabled { get; set; }
     public int BrightnessValue { get; set; }
+    public bool ContrastEnabled { get; set; }
+    public int ContrastValue { get; set; }
 
     private ProcessingSettings()
     {
