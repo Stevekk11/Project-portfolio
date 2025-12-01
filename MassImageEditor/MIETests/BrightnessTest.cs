@@ -7,6 +7,7 @@ using NUnit.Framework;
 /// <summary>
 /// Represents a test class for handling brightness-related functionalities.
 /// </summary>
+[TestFixture]
 public class BrightnessTest
 {
     private Bitmap _testImage = null!;
