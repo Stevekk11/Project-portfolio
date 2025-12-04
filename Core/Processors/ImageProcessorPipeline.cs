@@ -74,6 +74,11 @@ public sealed class ImageProcessorPipeline
         {
             pipeline.AddProcessor(new ContrastProcessor(settings.ContrastValue));
         }
+        //Add sharpness processor
+        if (settings.SharpnessEnabled)
+        {
+            pipeline.AddProcessor(new SharpnessProcessor(settings.SharpnessValue));
+        }
 
         return pipeline;
     }

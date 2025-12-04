@@ -20,6 +20,8 @@ public partial class Settings : Form
         DetectThreads();
         _settings = ProcessingSettings.Instance;
         LoadSettings();
+        this.FormBorderStyle = FormBorderStyle.FixedSingle;
+        this.MaximizeBox = false;
     }
 
     /// <summary>
@@ -57,6 +59,7 @@ public partial class Settings : Form
         BrightnessBox.Checked = _settings.BrightnessEnabled;
         trackBar1.Value = _settings.BrightnessValue;
         ContrastTrackBar.Value = _settings.ContrastValue;
+        Sharpness.Value = _settings.SharpnessValue;
     }
 
     /// <summary>
@@ -107,6 +110,9 @@ public partial class Settings : Form
         //Save contrast checkbox and value
         _settings.ContrastValue = ContrastTrackBar.Value;
         _settings.ContrastEnabled = ContrastCheckBox.Checked;
+        //Save sharpness checkbox and value
+        _settings.SharpnessEnabled = SharpnessChkBox.Checked;
+        _settings.SharpnessValue = (int)Sharpness.Value;
     }
 
     private bool ValidateDimensions(int? w, int? h)
@@ -195,6 +201,18 @@ public partial class Settings : Form
         else
         {
             ContrastTrackBar.Enabled = false;
+        }
+    }
+
+    private void SharpnessChkBox_CheckedChanged(object sender, EventArgs e)
+    {
+        if (SharpnessChkBox.Checked)
+        {
+            Sharpness.Enabled = true;
+        }
+        else
+        {
+            Sharpness.Enabled = false;
         }
     }
 }

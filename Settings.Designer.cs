@@ -52,10 +52,13 @@ partial class Settings
         ContrastCheckBox = new System.Windows.Forms.CheckBox();
         ContrastTrackBar = new System.Windows.Forms.TrackBar();
         label5 = new System.Windows.Forms.Label();
+        Sharpness = new System.Windows.Forms.NumericUpDown();
+        SharpnessChkBox = new System.Windows.Forms.CheckBox();
         PerformanceGroupBox.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)MaxThreadsChooser).BeginInit();
         ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
         ((System.ComponentModel.ISupportInitialize)ContrastTrackBar).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)Sharpness).BeginInit();
         SuspendLayout();
         // 
         // ResizeCheckBox
@@ -183,7 +186,7 @@ partial class Settings
         // ExitButton
         // 
         ExitButton.BackColor = System.Drawing.Color.BurlyWood;
-        ExitButton.Location = new System.Drawing.Point(588, 346);
+        ExitButton.Location = new System.Drawing.Point(614, 435);
         ExitButton.Name = "ExitButton";
         ExitButton.Size = new System.Drawing.Size(174, 68);
         ExitButton.TabIndex = 14;
@@ -258,11 +261,33 @@ partial class Settings
         label5.TabIndex = 21;
         label5.Text = "0     10     20     30    40     def.     60    70     80    90     100";
         // 
+        // Sharpness
+        // 
+        Sharpness.BackColor = System.Drawing.Color.LightGreen;
+        Sharpness.Location = new System.Drawing.Point(492, 321);
+        Sharpness.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+        Sharpness.Name = "Sharpness";
+        Sharpness.Size = new System.Drawing.Size(133, 23);
+        Sharpness.TabIndex = 22;
+        Sharpness.Value = new decimal(new int[] { 1, 0, 0, 0 });
+        // 
+        // SharpnessChkBox
+        // 
+        SharpnessChkBox.Location = new System.Drawing.Point(494, 284);
+        SharpnessChkBox.Name = "SharpnessChkBox";
+        SharpnessChkBox.Size = new System.Drawing.Size(170, 33);
+        SharpnessChkBox.TabIndex = 23;
+        SharpnessChkBox.Text = "Sharpen image";
+        SharpnessChkBox.UseVisualStyleBackColor = true;
+        SharpnessChkBox.CheckedChanged += SharpnessChkBox_CheckedChanged;
+        // 
         // Settings
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        ClientSize = new System.Drawing.Size(800, 450);
+        ClientSize = new System.Drawing.Size(800, 515);
+        Controls.Add(SharpnessChkBox);
+        Controls.Add(Sharpness);
         Controls.Add(label5);
         Controls.Add(ContrastTrackBar);
         Controls.Add(ContrastCheckBox);
@@ -287,9 +312,13 @@ partial class Settings
         ((System.ComponentModel.ISupportInitialize)MaxThreadsChooser).EndInit();
         ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
         ((System.ComponentModel.ISupportInitialize)ContrastTrackBar).EndInit();
+        ((System.ComponentModel.ISupportInitialize)Sharpness).EndInit();
         ResumeLayout(false);
         PerformLayout();
     }
+
+    private System.Windows.Forms.NumericUpDown Sharpness;
+    private System.Windows.Forms.CheckBox SharpnessChkBox;
 
     private System.Windows.Forms.Label label5;
 
