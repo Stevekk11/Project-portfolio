@@ -1,0 +1,22 @@
+﻿@startuml MassImageEditor Image Processing Sequence
+actor User
+participant MainWindow
+participant ImageTaskQueue
+participant ImageWorker
+participant ImageProcessorPipeline
+participant FormatSaver
+participant ProcessingSettings
+User -> MainWindow: Select input/output folders
+User -> MainWindow: Click Start
+MainWindow -> ProcessingSettings: Read settings
+MainWindow -> ImageTaskQueue: Enqueue ImageTask(s)
+MainWindow -> ImageWorker: Create and start worker(s)
+MainWindow -> ImageWorker: Subscribe to events
+loop For each ImageTask
+    ImageWorker -> ImageTaskQueue: Dequeue ImageTask
+    ImageWorker -> ImageProcessorPipeline: Process(bitmap)
+    ImageProcessorPipeline -> IImageProcessor: Apply processors sequentially
+    ImageWorker -> FormatSaver: Save(processedImage, outputPath)
+    ImageWorker -> MainWindow: Fire TaskCompleted/TaskFailed event
+end
+@enduml

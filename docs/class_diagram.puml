@@ -44,6 +44,11 @@ package "UI Layer" {
     class Program {
         + {static} Main() : void
     }
+
+    class ImagePreviewForm {
+        + ImagePreviewForm()
+        + ShowPreview(imagePath : string)
+    }
 }
 
 package "Core" {
@@ -93,7 +98,13 @@ package "Core" {
         + ConvertToFormat : string?
         + BlackAndWhiteEnabled : bool
         + MaxThreads : int
-        
+        + BrightnessEnabled : bool
+        + BrightnessValue : int
+        + ContrastEnabled : bool
+        + ContrastValue : int
+        + SharpnessEnabled : bool
+        + SharpnessValue : int
+
         - ProcessingSettings()
     }
 }
@@ -135,6 +146,24 @@ package "Core.Processors" {
         + ShouldProcess : bool <<get>>
     }
     
+    class BrightnessProcessor {
+        + BrightnessProcessor(brightness : int)
+        + Process(image : Bitmap) : Bitmap
+        + ShouldProcess : bool <<get>>
+    }
+
+    class ContrastProcessor {
+        + ContrastProcessor(contrast : int)
+        + Process(image : Bitmap) : Bitmap
+        + ShouldProcess : bool <<get>>
+    }
+
+    class SharpnessProcessor {
+        + SharpnessProcessor(sharpness : int)
+        + Process(image : Bitmap) : Bitmap
+        + ShouldProcess : bool <<get>>
+    }
+
     class FormatSaver {
         - _format : string
         
@@ -155,6 +184,7 @@ MainWindow ..> ImageWorker : creates *
 MainWindow ..> ImageTask : handles
 MainWindow ..> ProcessingSettings : reads
 Settings ..> ProcessingSettings : modifies
+ImagePreviewForm ..> ImageTask : previews
 
 ' Core relationships
 ImageWorker --> ImageTaskQueue : dequeues from
@@ -169,11 +199,15 @@ ImageTaskQueue o-- ImageTask : contains *
 IImageProcessor <|.. ResizeProcessor : implements
 IImageProcessor <|.. RotateProcessor : implements
 IImageProcessor <|.. BlackAndWhiteProcessor : implements
+IImageProcessor <|.. BrightnessProcessor : implements
+IImageProcessor <|.. ContrastProcessor : implements
+IImageProcessor <|.. SharpnessProcessor : implements
 
 ImageProcessorPipeline o-- IImageProcessor : contains *
 ImageProcessorPipeline ..> ProcessingSettings : reads
 
 ImageWorker --> IImageProcessor : uses via pipeline
+FormatSaver ..> ProcessingSettings : reads
 
 ' Notes
 note right of ProcessingSettings
@@ -202,3 +236,5 @@ note bottom of ImageWorker
 end note
 
 @enduml
+
+
