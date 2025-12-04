@@ -167,7 +167,7 @@ The application uses several design patterns:
 - **FormatSaver**: Handles image format conversion and saving
 
 ### Class Diagram
-See [docs_class-diagram.puml](class_diagram.puml) for detailed UML Class diagram.
+See [Class diagram](MassImageEditor_Class_Diagram-0.png) for detailed UML Class diagram.
 
 ## Runtime Behavior
 
@@ -201,7 +201,7 @@ See [docs_class-diagram.puml](class_diagram.puml) for detailed UML Class diagram
 - **Completed/Cancelled** → User clicks Clear → **Idle**
 
 ### Sequence Diagram
-See [docs_class-diagram.puml](behavioral_diagram.puml) for detailed UML Sequence diagram showing the complete processing flow.
+See [State diagram](MassImageEditor_Image_Processing_Sequence-0.png) for detailed UML Sequence diagram showing the complete processing flow.
 
 ## Dependencies and Third-Party Libraries
 
