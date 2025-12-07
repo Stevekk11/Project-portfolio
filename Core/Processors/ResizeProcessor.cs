@@ -61,3 +61,4 @@ public sealed class ResizeProcessor : IImageProcessor
         return resized;
     }
 }
+

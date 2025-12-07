@@ -6,6 +6,7 @@ public class BlackAndWhiteProcessor : IImageProcessor
     {
         ShouldProcess = shouldProcess;
     }
+
     public Bitmap Process(Bitmap image)
     {
         if (!ShouldProcess)
@@ -25,7 +26,7 @@ public class BlackAndWhiteProcessor : IImageProcessor
                                                              + (originalColor.B * .11));
 
                 //create the color object
-                Color newColor =  Color.FromArgb(grayScale, grayScale, grayScale);
+                Color newColor = Color.FromArgb(grayScale, grayScale, grayScale);
 
                 //set the new image's pixel to the grayscale version
                 newBitmap.SetPixel(i, j, newColor);
@@ -33,7 +34,6 @@ public class BlackAndWhiteProcessor : IImageProcessor
         }
 
         return newBitmap;
-
     }
 
     public bool ShouldProcess { get; }
