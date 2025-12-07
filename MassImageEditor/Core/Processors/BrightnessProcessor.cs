@@ -10,9 +10,10 @@ public class BrightnessProcessor : IImageProcessor
     private int _brightness;
 
     public BrightnessProcessor(int brightness)
-        {
-            _brightness = brightness;
-        }
+    {
+        _brightness = brightness;
+    }
+
     public Bitmap Process(Bitmap image)
     {
         if (!ShouldProcess)

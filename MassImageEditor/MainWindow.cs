@@ -40,6 +40,8 @@ public partial class MainWindow : Form
         Images.Columns.Add("Progress", 80);
         Images.Columns.Add("Message", 250);
         Images.ItemActivate += Images_ItemActivate;
+        this.FormBorderStyle = FormBorderStyle.FixedSingle;
+        this.MaximizeBox = false;
     }
 
     private void SettingsButton_Click(object sender, EventArgs e)

@@ -52,10 +52,18 @@ partial class Settings
         ContrastCheckBox = new System.Windows.Forms.CheckBox();
         ContrastTrackBar = new System.Windows.Forms.TrackBar();
         label5 = new System.Windows.Forms.Label();
+        Sharpness = new System.Windows.Forms.NumericUpDown();
+        SharpnessChkBox = new System.Windows.Forms.CheckBox();
+        label6 = new System.Windows.Forms.Label();
+        PixelateCheckBox = new System.Windows.Forms.CheckBox();
+        PixelateBlockSize = new System.Windows.Forms.NumericUpDown();
+        label7 = new System.Windows.Forms.Label();
         PerformanceGroupBox.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)MaxThreadsChooser).BeginInit();
         ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
         ((System.ComponentModel.ISupportInitialize)ContrastTrackBar).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)Sharpness).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)PixelateBlockSize).BeginInit();
         SuspendLayout();
         // 
         // ResizeCheckBox
@@ -183,7 +191,7 @@ partial class Settings
         // ExitButton
         // 
         ExitButton.BackColor = System.Drawing.Color.BurlyWood;
-        ExitButton.Location = new System.Drawing.Point(588, 346);
+        ExitButton.Location = new System.Drawing.Point(614, 435);
         ExitButton.Name = "ExitButton";
         ExitButton.Size = new System.Drawing.Size(174, 68);
         ExitButton.TabIndex = 14;
@@ -258,11 +266,76 @@ partial class Settings
         label5.TabIndex = 21;
         label5.Text = "0     10     20     30    40     def.     60    70     80    90     100";
         // 
+        // Sharpness
+        // 
+        Sharpness.BackColor = System.Drawing.Color.LightGreen;
+        Sharpness.Enabled = false;
+        Sharpness.Location = new System.Drawing.Point(492, 321);
+        Sharpness.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+        Sharpness.Name = "Sharpness";
+        Sharpness.Size = new System.Drawing.Size(133, 23);
+        Sharpness.TabIndex = 22;
+        Sharpness.Value = new decimal(new int[] { 25, 0, 0, 0 });
+        // 
+        // SharpnessChkBox
+        // 
+        SharpnessChkBox.Location = new System.Drawing.Point(494, 284);
+        SharpnessChkBox.Name = "SharpnessChkBox";
+        SharpnessChkBox.Size = new System.Drawing.Size(170, 33);
+        SharpnessChkBox.TabIndex = 23;
+        SharpnessChkBox.Text = "Sharpen image";
+        SharpnessChkBox.UseVisualStyleBackColor = true;
+        SharpnessChkBox.CheckedChanged += SharpnessChkBox_CheckedChanged;
+        // 
+        // label6
+        // 
+        label6.Location = new System.Drawing.Point(631, 323);
+        label6.Name = "label6";
+        label6.Size = new System.Drawing.Size(33, 21);
+        label6.TabIndex = 24;
+        label6.Text = "%";
+        // 
+        // PixelateCheckBox
+        // 
+        PixelateCheckBox.Location = new System.Drawing.Point(494, 357);
+        PixelateCheckBox.Name = "PixelateCheckBox";
+        PixelateCheckBox.Size = new System.Drawing.Size(120, 21);
+        PixelateCheckBox.TabIndex = 25;
+        PixelateCheckBox.Text = "Pixelate image";
+        PixelateCheckBox.UseVisualStyleBackColor = true;
+        PixelateCheckBox.CheckedChanged += PixelateCheckBox_CheckedChanged;
+        // 
+        // PixelateBlockSize
+        // 
+        PixelateBlockSize.BackColor = System.Drawing.Color.LightGreen;
+        PixelateBlockSize.Enabled = false;
+        PixelateBlockSize.Location = new System.Drawing.Point(492, 384);
+        PixelateBlockSize.Maximum = new decimal(new int[] { 500, 0, 0, 0 });
+        PixelateBlockSize.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+        PixelateBlockSize.Name = "PixelateBlockSize";
+        PixelateBlockSize.Size = new System.Drawing.Size(133, 23);
+        PixelateBlockSize.TabIndex = 26;
+        PixelateBlockSize.Value = new decimal(new int[] { 10, 0, 0, 0 });
+        // 
+        // label7
+        // 
+        label7.Location = new System.Drawing.Point(631, 387);
+        label7.Name = "label7";
+        label7.Size = new System.Drawing.Size(67, 19);
+        label7.TabIndex = 27;
+        label7.Text = "pixel size";
+        // 
         // Settings
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        ClientSize = new System.Drawing.Size(800, 450);
+        ClientSize = new System.Drawing.Size(800, 515);
+        Controls.Add(label7);
+        Controls.Add(PixelateBlockSize);
+        Controls.Add(PixelateCheckBox);
+        Controls.Add(label6);
+        Controls.Add(SharpnessChkBox);
+        Controls.Add(Sharpness);
         Controls.Add(label5);
         Controls.Add(ContrastTrackBar);
         Controls.Add(ContrastCheckBox);
@@ -287,9 +360,21 @@ partial class Settings
         ((System.ComponentModel.ISupportInitialize)MaxThreadsChooser).EndInit();
         ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
         ((System.ComponentModel.ISupportInitialize)ContrastTrackBar).EndInit();
+        ((System.ComponentModel.ISupportInitialize)Sharpness).EndInit();
+        ((System.ComponentModel.ISupportInitialize)PixelateBlockSize).EndInit();
         ResumeLayout(false);
         PerformLayout();
     }
+
+    private System.Windows.Forms.NumericUpDown PixelateBlockSize;
+    private System.Windows.Forms.Label label7;
+
+    private System.Windows.Forms.CheckBox PixelateCheckBox;
+
+    private System.Windows.Forms.Label label6;
+
+    private System.Windows.Forms.NumericUpDown Sharpness;
+    private System.Windows.Forms.CheckBox SharpnessChkBox;
 
     private System.Windows.Forms.Label label5;
 
