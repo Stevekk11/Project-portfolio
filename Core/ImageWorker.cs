@@ -14,6 +14,8 @@ public sealed class ImageWorker
     public event Action<ImageTask>? TaskStarted;
     public event Action<ImageTask, Exception>? TaskFailed;
 
+    public Func<ImageTask, IProgressReporter?>? ProgressReporterFactory { get; set; }
+
     public ImageWorker(ImageTaskQueue taskQueue, CancellationToken cancellationToken)
     {
         _taskQueue = taskQueue;
@@ -75,7 +77,8 @@ public sealed class ImageWorker
             {
                 TaskStarted?.Invoke(task);
 
-                ProcessImage(task);
+                var reporter = ProgressReporterFactory?.Invoke(task);
+                ProcessImage(task, reporter);
 
                 TaskCompleted?.Invoke(task);
             }
@@ -91,13 +94,14 @@ public sealed class ImageWorker
     /// and saving the result to the output path.
     /// </summary>
     /// <param name="task">The image task that encapsulates the input file path and output file path for processing.</param>
-    private void ProcessImage(ImageTask task)
+    /// <param name="progressReporter">Reports the progress of the task.</param>
+    private void ProcessImage(ImageTask task, IProgressReporter? progressReporter = null)
     {
         // Load the image
         using var image = Image.FromFile(task.FilePath);
         using var bitmap = new Bitmap(image);
 
-        Bitmap processedImage = _pipeline.Process(bitmap);
+        Bitmap processedImage = _pipeline.Process(bitmap, progressReporter);
 
         // Determine output path with correct extension
         string outputPath = _formatSaver.GetOutputPath(task.OutputPath);

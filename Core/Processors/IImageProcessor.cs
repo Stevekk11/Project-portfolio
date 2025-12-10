@@ -12,9 +12,9 @@ public interface IImageProcessor
     Bitmap Process(Bitmap image);
 
     /// <summary>
-    /// Optional progress-aware overload. Default implementation
+    /// Optional progress-aware overload. Default implementation calls the simple method for backward compatibility.
     /// </summary>
-    Bitmap Process(Bitmap image, IProgressReporter progressReporter = null)
+    Bitmap Process(Bitmap image, IProgressReporter? progressReporter)
     {
         return Process(image);
     }
