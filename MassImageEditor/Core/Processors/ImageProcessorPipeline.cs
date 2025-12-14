@@ -47,6 +47,35 @@ public sealed class ImageProcessorPipeline
     }
 
     /// <summary>
+    /// Processes an image through all processors in the pipeline, optionally reporting progress.
+    /// Returns the final processed image.
+    /// </summary>
+    public Bitmap Process(Bitmap sourceImage, IProgressReporter? progressReporter)
+    {
+        Bitmap currentImage = sourceImage;
+        Bitmap? previousImage = null;
+
+        foreach (var processor in _processors)
+        {
+            if (!processor.ShouldProcess)
+                continue;
+
+            Bitmap processedImage = processor.Process(currentImage, progressReporter);
+
+            // Clean up intermediate images (but not the source)
+            if (previousImage != null && previousImage != sourceImage)
+            {
+                previousImage.Dispose();
+            }
+
+            previousImage = currentImage;
+            currentImage = processedImage;
+        }
+
+        return currentImage;
+    }
+
+    /// <summary>
     /// Creates a pipeline based on the current ProcessingSettings.
     /// </summary>
     public static ImageProcessorPipeline CreateFromSettings(ProcessingSettings settings)

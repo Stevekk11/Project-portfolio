@@ -7,7 +7,7 @@ public class BlackAndWhiteProcessor : IImageProcessor
         ShouldProcess = shouldProcess;
     }
 
-    public Bitmap Process(Bitmap image)
+    public Bitmap Process(Bitmap image, IProgressReporter? progressReporter)
     {
         if (!ShouldProcess)
             return image;
@@ -31,8 +31,13 @@ public class BlackAndWhiteProcessor : IImageProcessor
                 //set the new image's pixel to the grayscale version
                 newBitmap.SetPixel(i, j, newColor);
             }
+            // Report progress after each row
+            if (progressReporter != null)
+            {
+                int percent = (int)(((double)(i + 1) / image.Width) * 100);
+                progressReporter.ReportProgress(percent, $"Processed row {i + 1} of {image.Width}");
+            }
         }
-
         return newBitmap;
     }
 

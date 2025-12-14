@@ -36,7 +36,7 @@ public class BWTest
     public void Process_ConvertsToBW_WhenProcessing()
     {
         var processor = new BlackAndWhiteProcessor(true);
-        var result = processor.Process(_testImage);
+        var result = processor.Process(_testImage, null);
         var pixel = result.GetPixel(50, 50);
         Assert.That(pixel.R, Is.EqualTo(pixel.G));
         Assert.That(pixel.G, Is.EqualTo(pixel.B));

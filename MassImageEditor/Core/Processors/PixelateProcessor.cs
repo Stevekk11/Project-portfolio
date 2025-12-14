@@ -9,7 +9,7 @@ public class PixelateProcessor : IImageProcessor
         _blockSize = blockSize;
     }
 
-    public Bitmap Process(Bitmap image)
+    public Bitmap Process(Bitmap image, IProgressReporter? progressReporter)
     {
         if (!ShouldProcess)
             return image;
@@ -51,6 +51,8 @@ public class PixelateProcessor : IImageProcessor
                     }
                 }
             }
+            // Report progress after each row of blocks
+            progressReporter?.ReportProgress((int)(((double)(y + blockSize) * 100 / image.Height)), $"Processed row starting at {y} of {image.Height}");
         }
         return result;
     }

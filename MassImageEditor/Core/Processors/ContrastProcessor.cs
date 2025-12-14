@@ -2,6 +2,11 @@
 
 namespace MassImageEditor.Core.Processors;
 
+/// <summary>
+/// Changes the contrast of the given image.
+///
+/// <returns></returns>
+/// </summary>
 public class ContrastProcessor : IImageProcessor
 {
     private int _contrast;
@@ -11,12 +16,7 @@ public class ContrastProcessor : IImageProcessor
         _contrast = contrast;
     }
 
-    /// <summary>
-    /// Changes the contrast of the given image.
-    ///
-    /// </summary>
-    /// <param name="image">The image to process</param>
-    /// <returns></returns>
+
     public Bitmap Process(Bitmap image)
     {
         if (!ShouldProcess)

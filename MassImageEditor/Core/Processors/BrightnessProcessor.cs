@@ -14,7 +14,7 @@ public class BrightnessProcessor : IImageProcessor
         _brightness = brightness;
     }
 
-    public Bitmap Process(Bitmap image)
+    public Bitmap Process(Bitmap image, IProgressReporter? progressReporter)
     {
         if (!ShouldProcess)
         {
@@ -37,6 +37,8 @@ public class BrightnessProcessor : IImageProcessor
 
                 adjustedImage.SetPixel(x, y, Color.FromArgb(pixel.A, red, green, blue));
             }
+            // Report progress after each column
+            progressReporter?.ReportProgress((int)(((double)(x + 1) / image.Width) * 100), $"Processed column {x + 1} of {image.Width}");
         }
 
         return adjustedImage;

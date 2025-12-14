@@ -182,6 +182,10 @@ public partial class MainWindow : Form
             worker.TaskStarted += OnTaskStarted;
             worker.TaskCompleted += OnTaskCompleted;
             worker.TaskFailed += OnTaskFailed;
+            worker.ProgressReporterFactory = (task) => {
+                var item = FindListViewItem(task.FilePath);
+                return item != null ? new MainWindowProgressReporter(this, item) : null;
+            };
             _workers.Add(worker);
         }
 

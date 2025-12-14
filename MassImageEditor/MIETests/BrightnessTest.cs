@@ -37,7 +37,7 @@ public class BrightnessTest
     public void Process_ChangesBrightness_WhenProcessing()
     {
         var processor = new BrightnessProcessor(50);
-        var result = processor.Process(_testImage);
+        var result = processor.Process(_testImage, null);
         var pixel = result.GetPixel(50, 50);
         Assert.That(pixel, Is.Not.EqualTo(_testImage.GetPixel(50, 50)));
     }
