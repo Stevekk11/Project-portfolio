@@ -12,6 +12,7 @@ namespace MassImageEditor;
 /// This class handles the initialization of components, event handlers, and the configuration
 /// of controls such as buttons and ListView for functionality like selecting inputs, starting
 /// the processing, clearing operations, and exiting the application.
+/// Copyright (c) 2025 MassImageEditor. Licensed under the MIT License.
 /// </remarks>
 public partial class MainWindow : Form
 {

@@ -37,7 +37,7 @@ public class PixelateTest
     public void Process_PixelatesImage_WhenProcessing()
     {
         var processor = new PixelateProcessor(10);
-        var result = processor.Process(_testImage);
+        var result = processor.Process(_testImage, null);
         var pixel = result.GetPixel(5, 5);
         Assert.That(pixel, Is.EqualTo(result.GetPixel(9, 9)));
     }

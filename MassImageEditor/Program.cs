@@ -2,7 +2,9 @@ using System.Configuration;
 using Serilog;
 
 namespace MassImageEditor;
-
+/// <summary>
+/// Copyright (c) 2025 Štěpán Végh. Licensed under the MIT License.
+/// </summary>
 static class Program
 {
     /// <summary>
