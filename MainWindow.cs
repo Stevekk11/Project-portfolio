@@ -86,7 +86,7 @@ public partial class MainWindow : Form
             SqlConnection connection = new SqlConnection(cs);
             connection.Open();
 
-            Doprava doprava = new Doprava(connection);
+            Transport doprava = new Transport(connection);
             doprava.Show();
         }
         catch (Exception exception)

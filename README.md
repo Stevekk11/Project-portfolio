@@ -1,6 +1,6 @@
 # Introduction
 This app is used as an GUI for a database in MS SQL Server 2022.
-You can use it to open any database, or the Doprava database for which it has dedicated
+You can use it to open any database, or the Transport database for which it has dedicated
 functionality.
 
 # Setup
@@ -23,7 +23,7 @@ Launch the app
 # Import CSV
 
 In the chooser window, you can import a csv with data that matches the rows in the provided database. Use ; as delimiter.
-In the Doprava DB, you must import a CSV with this data:
+In the Transport DB, you must import a CSV with this data:
 
 # <data>
     StationName,StationType,HasShelter,HasBench,HasTrashBin,HasInfoPanel,RequestStop,BarrierFree,LineNumber,LineName

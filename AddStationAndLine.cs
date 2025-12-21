@@ -2,11 +2,11 @@
 
 namespace DatabazeProjekt;
 
-public partial class Přidej_stanici_a_linku : Form
+public partial class AddStationAndLine : Form
 {
     private SqlConnection connection;
 
-    public Přidej_stanici_a_linku(SqlConnection conn)
+    public AddStationAndLine(SqlConnection conn)
     {
         InitializeComponent();
         this.connection = conn;

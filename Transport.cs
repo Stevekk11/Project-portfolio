@@ -4,11 +4,11 @@ namespace DatabazeProjekt;
 /// <summary>
 /// Class for the Doprava DB
 /// </summary>
-public partial class Doprava : Form
+public partial class Transport : Form
 {
     private SqlConnection connection;
 
-    public Doprava(SqlConnection connection)
+    public Transport(SqlConnection connection)
     {
         InitializeComponent();
 
@@ -33,8 +33,8 @@ public partial class Doprava : Form
     /// <param name="e"></param>
     private void staniceLinka_Click(object sender, EventArgs e)
     {
-        Přidej_stanici_a_linku pr = new Přidej_stanici_a_linku(connection);
-        pr.ShowDialog();
+        AddStationAndLine station = new AddStationAndLine(connection);
+        station.ShowDialog();
     }
 
     /// <summary>
@@ -44,8 +44,8 @@ public partial class Doprava : Form
     /// <param name="e"></param>
     private void pristresek_Click(object sender, EventArgs e)
     {
-        Přidej_Přístřešek prp = new Přidej_Přístřešek(connection);
-        prp.ShowDialog();
+        AddShelter shelter = new AddShelter(connection);
+        shelter.ShowDialog();
     }
 
     /// <summary>
@@ -56,8 +56,8 @@ public partial class Doprava : Form
     /// <exception cref="NotImplementedException"></exception>
     private void metro_Click(object sender, EventArgs e)
     {
-        Přidej_metro_stanici pms = new Přidej_metro_stanici(connection);
-        pms.ShowDialog();
+        AddMetroStation metro = new AddMetroStation(connection);
+        metro.ShowDialog();
     }
 
     /// <summary>
@@ -177,7 +177,7 @@ public partial class Doprava : Form
 
     private void vlak_Click(object sender, EventArgs e)
     {
-        Přidej_vlakovou_stanici pv = new Přidej_vlakovou_stanici(connection);
+        AddTrainStation pv = new AddTrainStation(connection);
         pv.ShowDialog();
     }
 

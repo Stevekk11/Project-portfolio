@@ -3,11 +3,11 @@ using Microsoft.Data.SqlClient;
 
 namespace DatabazeProjekt;
 
-public partial class Přidej_Přístřešek : Form
+public partial class AddShelter : Form
 {
     private SqlConnection connection;
 
-    public Přidej_Přístřešek(SqlConnection conn)
+    public AddShelter(SqlConnection conn)
     {
         InitializeComponent();
         this.connection = conn;
