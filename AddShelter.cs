@@ -1,16 +1,21 @@
 ﻿using System.Data;
+using DatabazeProjekt.Repositories;
 using Microsoft.Data.SqlClient;
 
 namespace DatabazeProjekt;
 
 public partial class AddShelter : Form
 {
-    private SqlConnection connection;
+    private readonly SqlConnection connection;
+    private readonly IStationRepository _stationRepository;
+    private readonly IShelterRepository _shelterRepository;
 
     public AddShelter(SqlConnection conn)
     {
         InitializeComponent();
         this.connection = conn;
+        _stationRepository = new StationRepository(conn);
+        _shelterRepository = new ShelterRepository(conn);
     }
 /// <summary>
 /// This method adds the shelter with the provided values.
@@ -21,26 +26,17 @@ public partial class AddShelter : Form
     {
         try
         {
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = connection;
-            string query =
-                "insert into pristresek (stanice_id,typ,barva, vlastnik, spravce,datum_vyroby) values (@staniceId,@typ,@barva,@vlastnik,@spravce,@datum_vyr)";
-            cmd.CommandText = query;
             int staniceId = GetId();
             string typ = typPrist.Text;
             string barva = this.barva.Text;
             string vlastnik = this.vlastnik.Text;
             string spravce = this.spravce.Text;
             DateTime datumVyroby = datum.Value;
-            cmd.Parameters.Add("@staniceId", SqlDbType.Int).Value = staniceId;
-            cmd.Parameters.AddWithValue("@typ", typ);
-            cmd.Parameters.AddWithValue("@barva", barva);
-            cmd.Parameters.AddWithValue("@vlastnik", vlastnik);
-            cmd.Parameters.AddWithValue("@spravce", spravce);
-            cmd.Parameters.Add("@datum_vyr", SqlDbType.DateTime).Value = datumVyroby;
-            cmd.ExecuteNonQuery();
-            MessageBox.Show("Přístřešek byl úspěšně přidán.", "Úspěch", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            cmd.Dispose();
+
+            _shelterRepository.AddShelter(staniceId, typ, barva, vlastnik, spravce, datumVyroby);
+
+            MessageBox.Show("Přístřešek byl úspěšně přidán.", "Úspěch", MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
             this.Close();
         }
         catch (Exception exception)
@@ -55,10 +51,6 @@ public partial class AddShelter : Form
     /// <returns>The ID</returns>
     private int GetId()
     {
-        SqlCommand cmd = new SqlCommand();
-        cmd.Connection = connection;
-        cmd.CommandText = "select id_stanice from stanice where nazev = @staniceName";
-        cmd.Parameters.AddWithValue("@staniceName", stanice.Text);
-        return (int)cmd.ExecuteScalar();
+        return _stationRepository.GetStationIdByName(stanice.Text);
     }
 }

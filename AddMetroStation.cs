@@ -1,15 +1,20 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DatabazeProjekt.Repositories;
+using Microsoft.Data.SqlClient;
 
 namespace DatabazeProjekt;
 
 public partial class AddMetroStation : Form
 {
-    private SqlConnection conn;
+    private readonly SqlConnection conn;
+    private readonly IStationRepository _stationRepository;
+    private readonly IMetroStationRepository _metroStationRepository;
 
     public AddMetroStation(SqlConnection connection)
     {
         InitializeComponent();
         this.conn = connection;
+        _stationRepository = new StationRepository(connection);
+        _metroStationRepository = new MetroStationRepository(connection);
     }
 /// <summary>
 /// Sends the data to the database
@@ -20,29 +25,22 @@ public partial class AddMetroStation : Form
     {
         try
         {
-            SqlCommand command = conn.CreateCommand();
             int id = GetId();
             double hloubka = Convert.ToDouble(this.hloubka.Text);
             string uklid = this.uklid.Text;
             bool maWc = wc.Checked;
             DateTime datumUklidu = datPoslUkl.Value;
-            command.CommandText =
-                "insert into metro_stanice(stanice_id, hloubka_pod_zemi, cetnost_uklidu, ma_wc, dat_posl_uklid) values (@id,@hloubka,@uklid,@maWc,@datumUklidu)";
-            command.Parameters.AddWithValue("@id", id);
-            command.Parameters.AddWithValue("@hloubka", hloubka);
-            command.Parameters.AddWithValue("@uklid", uklid);
-            command.Parameters.AddWithValue("@maWc", maWc);
-            command.Parameters.AddWithValue("@datumUklidu", datumUklidu);
-            command.ExecuteNonQuery();
-            command.Dispose();
-            MessageBox.Show("Metro stanice byla úspěšně přidána.", "Úspěch", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            _metroStationRepository.AddMetroStation(id, hloubka, uklid, maWc, datumUklidu);
+
+            MessageBox.Show("Metro stanice byla úspěšně přidána.", "Úspěch", MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
             this.Close();
         }
         catch (Exception exception)
         {
             MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
-        
     }
 /// <summary>
 /// Gets the station id by name.
@@ -50,9 +48,6 @@ public partial class AddMetroStation : Form
 /// <returns></returns>
     private int GetId()
     {
-        SqlCommand command = conn.CreateCommand();
-        command.CommandText = "SELECT id_stanice FROM stanice where nazev = @nazev";
-        command.Parameters.AddWithValue("@nazev", nazevStanice.Text);
-        return (int) command.ExecuteScalar();
+        return _stationRepository.GetStationIdByName(nazevStanice.Text);
     }
 }
