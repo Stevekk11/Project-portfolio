@@ -14,8 +14,15 @@ namespace DatabazeProjekt.Repositories
 
         public void AddStation(StationRecord station)
         {
-            string insertQuery = @"INSERT INTO dbo.stanice (nazev, typ_stanice, ma_pristresek, ma_lavicku, ma_kos, ma_infopanel, na_znameni, bezbarierova)
-                                    VALUES (@stationname, @stationtype, @hasshelter, @hasbench, @hastrashbin, @hasinfopanel, @requeststop, @barrierfree);";
+            // Reuse the id-returning insert to keep behavior consistent.
+            AddStationAndReturnId(station);
+        }
+
+        public int AddStationAndReturnId(StationRecord station)
+        {
+            const string insertQuery = "INSERT INTO dbo.stanice (nazev, typ_stanice, ma_pristresek, ma_lavicku, ma_kos, ma_infopanel, na_znameni, bezbarierova) " +
+                                       "OUTPUT INSERTED.id_stanice " +
+                                       "VALUES (@stationname, @stationtype, @hasshelter, @hasbench, @hastrashbin, @hasinfopanel, @requeststop, @barrierfree);";
             using (SqlCommand cmd = new SqlCommand(insertQuery, _connection))
             {
                 cmd.Parameters.AddWithValue("@stationname", station.StationName);
@@ -26,7 +33,7 @@ namespace DatabazeProjekt.Repositories
                 cmd.Parameters.AddWithValue("@hasinfopanel", station.HasInfoPanel);
                 cmd.Parameters.AddWithValue("@requeststop", station.RequestStop);
                 cmd.Parameters.AddWithValue("@barrierfree", station.BarrierFree);
-                cmd.ExecuteNonQuery();
+                return (int)cmd.ExecuteScalar();
             }
         }
 
@@ -65,6 +72,19 @@ namespace DatabazeProjekt.Repositories
                 }
             }
             return null;
+        }
+
+        public int GetStationIdByName(string name)
+        {
+            const string selectQuery = "SELECT id_stanice FROM dbo.stanice WHERE nazev = @name";
+            using (SqlCommand cmd = new SqlCommand(selectQuery, _connection))
+            {
+                cmd.Parameters.AddWithValue("@name", name);
+                object? result = cmd.ExecuteScalar();
+                if (result == null || result == DBNull.Value)
+                    throw new InvalidOperationException($"Station with name '{name}' was not found.");
+                return (int)result;
+            }
         }
 
         public IEnumerable<StationRecord> GetAllStations()
