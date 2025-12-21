@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net9.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWindowsForms>true</UseWindowsForms>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Update="MainWindow.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="Chooser.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="Doprava.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="Přidej stanici a linku.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="Přidej Přístřešek.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="Přidej vlakovou stanici.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="Přidej metro stanici.cs">
+        <SubType>Form</SubType>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CsvHelper" Version="33.0.1" />
+      <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
+      <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Blackbox testing\" />
+    </ItemGroup>
+
+</Project>
