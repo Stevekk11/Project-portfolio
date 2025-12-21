@@ -8,6 +8,7 @@ namespace DatabazeProjekt.Repositories
         void DeleteStationByName(string name);
         StationRecord GetStationByName(string name);
         IEnumerable<StationRecord> GetAllStations();
+        int AddStationAndReturnId(StationRecord station);
+        int GetStationIdByName(string name);
     }
 }
-
