@@ -1,4 +1,5 @@
-﻿create table dbo.linky
+﻿-- this script creates the database schema for a public transportation system, made for MS SQL Server.
+create table dbo.linky
 (
     id_linky    int identity
         primary key,

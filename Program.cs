@@ -1,4 +1,4 @@
-
+// Copyright (c) 2025 Štěpán Végh
 using DatabazeProjekt;
 
 static class Program
