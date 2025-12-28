@@ -1,4 +1,9 @@
 ﻿-- this script creates the database schema for a public transportation system, made for MS SQL Server.
+create database doprava;
+go
+use doprava
+go
+
 create table dbo.linky
 (
     id_linky    int identity
