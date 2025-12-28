@@ -57,16 +57,49 @@ public partial class Chooser : Form
     {
         try
         {
-            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT * FROM {tableName}", connection);
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT * FROM dbo.{tableName}", connection);
             DataTable tableData = new DataTable();
             adapter.Fill(tableData);
 
             dataGridView1.DataSource = tableData;
+            
+            // Kontrola, zda je toto pohled (VIEW) - pokud ano, zakáž editaci
+            if (IsView(tableName))
+            {
+                dataGridView1.ReadOnly = true;
+            }
+            else
+            {
+                dataGridView1.ReadOnly = false;
+            }
         }
         catch (Exception ex)
         {
             MessageBox.Show($"Chyba načítání tabulek: {ex.Message}", "Error", MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
+        }
+    }
+
+/// <summary>
+/// Checks if the given table is a view.
+/// </summary>
+/// <param name="tableName"></param>
+/// <returns></returns>
+    private bool IsView(string tableName)
+    {
+        try
+        {
+            SqlCommand command = new SqlCommand(
+                @"SELECT COUNT(*) FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = @tableName",
+                connection);
+            command.Parameters.AddWithValue("@tableName", tableName);
+            
+            int count = (int)command.ExecuteScalar();
+            return count > 0;
+        }
+        catch
+        {
+            return false;
         }
     }
 /// <summary>
@@ -76,6 +109,15 @@ public partial class Chooser : Form
 /// <param name="e"></param>
     private void Add_Click(object sender, EventArgs e)
     {
+        string selectedTable = TableSelectBox.SelectedItem?.ToString();
+        
+        if (selectedTable != null && IsView(selectedTable))
+        {
+            MessageBox.Show("Pohledy jsou jen pro čtení. Nelze přidávat řádky.", "Info", MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            return;
+        }
+        
         DataTable table = (DataTable)dataGridView1.DataSource;
         if (table != null)
         {
@@ -107,10 +149,17 @@ public partial class Chooser : Form
     {
         {
             string selectedTable = TableSelectBox.SelectedItem.ToString();
+            
+            if (IsView(selectedTable))
+            {
+                MessageBox.Show("Pohledy jsou jen pro čtení. Nelze ukládat změny.", "Info", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
 
             try
             {
-                SqlDataAdapter adapter = new SqlDataAdapter($"SELECT * FROM {selectedTable}", connection);
+                SqlDataAdapter adapter = new SqlDataAdapter($"SELECT * FROM dbo.{selectedTable}", connection);
                 SqlCommandBuilder builder = new SqlCommandBuilder(adapter);
 
                 DataTable changes = ((DataTable)dataGridView1.DataSource).GetChanges();

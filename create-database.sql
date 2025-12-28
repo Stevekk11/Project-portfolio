@@ -89,3 +89,41 @@ create table dbo.vlak_stanice
 )
 go
 
+create view dbo.v_stanice_s_linkami
+as
+select
+    s.id_stanice,
+    s.nazev as nazev_stanice,
+    s.typ_stanice,
+    coalesce(count(distinct sl.linka_id), 0) as pocet_linek,
+    s.ma_lavicku,
+    s.ma_kos,
+    s.ma_pristresek,
+    s.ma_infopanel,
+    s.na_znameni,
+    s.bezbarierova,
+    (case when s.ma_lavicku = 1 and s.ma_kos = 1 and s.ma_pristresek = 1 and s.ma_infopanel = 1 then 'Plně vybavena'
+          when s.ma_lavicku = 1 and s.ma_kos = 1 and s.ma_pristresek = 1 then 'Standardně vybavena'
+          else 'Částečně vybavena' end) as uroven_vybaveni
+from dbo.stanice s
+         left join dbo.stanice_linka sl on s.id_stanice = sl.stanice_id
+group by s.id_stanice, s.nazev, s.typ_stanice, s.ma_lavicku, s.ma_kos, s.ma_pristresek, s.ma_infopanel, s.na_znameni, s.bezbarierova
+
+create view dbo.v_linky_s_pokrytim
+as
+select
+    l.id_linky,
+    l.cislo_linky,
+    l.nazev_linky,
+    coalesce(count(distinct sl.stanice_id), 0) as pocet_stanic,
+    coalesce(sum(case when s.typ_stanice = 'bus' then 1 else 0 end), 0) as pocet_autobusovych,
+    coalesce(sum(case when s.typ_stanice = 'metro' then 1 else 0 end), 0) as pocet_metrovych,
+    coalesce(sum(case when s.typ_stanice = 'tram' then 1 else 0 end), 0) as pocet_tramvajovych,
+    coalesce(sum(case when s.typ_stanice = 'vlak' then 1 else 0 end), 0) as pocet_vlakovych,
+    coalesce(min(case when s.typ_stanice = 'metro' then ms.hloubka_pod_zemi else null end), 0) as min_hloubka_metra,
+    coalesce(max(case when s.typ_stanice = 'metro' then ms.hloubka_pod_zemi else null end), 0) as max_hloubka_metra
+from dbo.linky l
+         left join dbo.stanice_linka sl on l.id_linky = sl.linka_id
+         left join dbo.stanice s on sl.stanice_id = s.id_stanice
+         left join dbo.metro_stanice ms on s.id_stanice = ms.stanice_id
+group by l.id_linky, l.cislo_linky, l.nazev_linky
