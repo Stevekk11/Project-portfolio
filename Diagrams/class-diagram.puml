@@ -1,0 +1,240 @@
+﻿@startuml Transport Management System - Class Diagram
+
+' Main Entry Point
+class Program {
+    {static} +Main() : void
+}
+
+' Data Model
+class StationRecord {
+    +StationName : string
+    +StationType : string
+    +HasShelter : bool
+    +HasBench : bool
+    +HasTrashBin : bool
+    +HasInfoPanel : bool
+    +RequestStop : bool
+    +BarrierFree : bool
+    +LineNumber : int
+    +LineName : string
+}
+
+' Repository Interfaces
+interface IStationRepository {
+    +AddStation(station: StationRecord) : void
+    +DeleteStationByName(name: string) : void
+    +GetStationByName(name: string) : StationRecord
+    +GetAllStations() : IEnumerable<StationRecord>
+    +AddStationAndReturnId(station: StationRecord) : int
+    +AddStationAndReturnId(station: StationRecord, transaction: SqlTransaction) : int
+    +GetStationIdByName(name: string) : int
+}
+
+interface ILineRepository {
+    +GetOrCreateLineId(lineNumber: int, lineName: string) : int
+    +GetOrCreateLineId(lineNumber: int, lineName: string, transaction: SqlTransaction) : int
+}
+
+interface IMetroStationRepository {
+    +AddMetroStation(stationId: int, depthUnderGround: double, cleaningFrequency: string, hasWc: bool, lastCleaningDate: DateTime) : void
+}
+
+interface ITrainStationRepository {
+    +AddTrainStation(stationId: int, platformCount: int, isElectrified: bool, electricalSystem: string, trackGauge: int) : void
+}
+
+interface IShelterRepository {
+    +AddShelter(stationId: int, type: string, color: string, owner: string, administrator: string, manufacturingDate: DateTime) : void
+}
+
+interface IStationLineRepository {
+    +AddStationLine(stationId: int, lineId: int) : void
+    +AddStationLine(stationId: int, lineId: int, transaction: SqlTransaction) : void
+}
+
+interface IReportRepository {
+    +GetTransportSummary() : IEnumerable<TransportSummaryReport>
+}
+
+' Repository Implementations
+class StationRepository {
+    -_connection : SqlConnection
+    +StationRepository(connection: SqlConnection)
+    +AddStation(station: StationRecord) : void
+    +DeleteStationByName(name: string) : void
+    +GetStationByName(name: string) : StationRecord
+    +GetAllStations() : IEnumerable<StationRecord>
+    +AddStationAndReturnId(station: StationRecord) : int
+    +AddStationAndReturnId(station: StationRecord, transaction: SqlTransaction) : int
+    +GetStationIdByName(name: string) : int
+}
+
+class LineRepository {
+    -_connection : SqlConnection
+    +LineRepository(connection: SqlConnection)
+    +GetOrCreateLineId(lineNumber: int, lineName: string) : int
+    +GetOrCreateLineId(lineNumber: int, lineName: string, transaction: SqlTransaction) : int
+}
+
+class MetroStationRepository {
+    -_connection : SqlConnection
+    +MetroStationRepository(connection: SqlConnection)
+    +AddMetroStation(stationId: int, depthUnderGround: double, cleaningFrequency: string, hasWc: bool, lastCleaningDate: DateTime) : void
+}
+
+class TrainStationRepository {
+    -_connection : SqlConnection
+    +TrainStationRepository(connection: SqlConnection)
+    +AddTrainStation(stationId: int, platformCount: int, isElectrified: bool, electricalSystem: string, trackGauge: int) : void
+}
+
+class ShelterRepository {
+    -_connection : SqlConnection
+    +ShelterRepository(connection: SqlConnection)
+    +AddShelter(stationId: int, type: string, color: string, owner: string, administrator: string, manufacturingDate: DateTime) : void
+}
+
+class StationLineRepository {
+    -_connection : SqlConnection
+    +StationLineRepository(connection: SqlConnection)
+    +AddStationLine(stationId: int, lineId: int) : void
+    +AddStationLine(stationId: int, lineId: int, transaction: SqlTransaction) : void
+}
+
+class ReportRepository {
+    -_connection : SqlConnection
+    +ReportRepository(connection: SqlConnection)
+    +GetTransportSummary() : IEnumerable<TransportSummaryReport>
+}
+
+' Report Classes
+class TransportSummaryReport {
+    +StationId : int
+    +StationName : string
+    +StationType : string
+    +LineCount : int
+    +HasBench : bool
+    +HasTrashBin : bool
+    +HasShelter : bool
+    +HasInfoPanel : bool
+    +RequestStop : bool
+    +BarrierFree : bool
+    +EquipmentLevel : string
+}
+
+class MarkdownReportWriter {
+    {static} +WriteTransportSummary(reports: IEnumerable<TransportSummaryReport>, filePath: string) : void
+}
+
+' UI Forms
+class MainWindow {
+    -ConnStr : CheckBox
+    -WinAuth : CheckBox
+    -UsernameField : TextBox
+    -PasswordField : TextBox
+    -ConfigName : TextBox
+    -ServerField : TextBox
+    -DBField : TextBox
+    +MainWindow()
+    -ConnStr_CheckedChanged(sender: object, e: EventArgs) : void
+    -Connect_Click(sender: object, e: EventArgs) : void
+}
+
+class Transport {
+    -_connection : SqlConnection
+    -_stationRepository : IStationRepository
+    -_reportRepository : IReportRepository
+    +Transport(connection: SqlConnection)
+    -exit_Click(sender: object, e: EventArgs) : void
+    -staniceLinka_Click(sender: object, e: EventArgs) : void
+    -pristresek_Click(sender: object, e: EventArgs) : void
+    -metro_Click(sender: object, e: EventArgs) : void
+    -vlak_Click(sender: object, e: EventArgs) : void
+    -importCSV_Click(sender: object, e: EventArgs) : void
+    -generateReport_Click(sender: object, e: EventArgs) : void
+}
+
+class Chooser {
+    -connection : SqlConnection
+    -TableSelectBox : ComboBox
+    -DataGridView : DataGridView
+    +Chooser(openConnection: SqlConnection)
+    -LoadTables() : void
+    -LoadTableData(tableName: string) : void
+    -TableSelectBox_SelectedIndexChanged(sender: object, e: EventArgs) : void
+    -SaveChanges_Click(sender: object, e: EventArgs) : void
+}
+
+class AddStationAndLine {
+    -_connection : SqlConnection
+    -_stationRepository : IStationRepository
+    -_lineRepository : ILineRepository
+    -_stationLineRepository : IStationLineRepository
+    +AddStationAndLine(connection: SqlConnection)
+    -Add_Click(sender: object, e: EventArgs) : void
+}
+
+class AddShelter {
+    -_connection : SqlConnection
+    -_stationRepository : IStationRepository
+    -_shelterRepository : IShelterRepository
+    +AddShelter(connection: SqlConnection)
+    -Add_Click(sender: object, e: EventArgs) : void
+}
+
+class AddMetroStation {
+    -_connection : SqlConnection
+    -_stationRepository : IStationRepository
+    -_metroStationRepository : IMetroStationRepository
+    +AddMetroStation(connection: SqlConnection)
+    -Add_Click(sender: object, e: EventArgs) : void
+}
+
+class AddTrainStation {
+    -_connection : SqlConnection
+    -_stationRepository : IStationRepository
+    -_trainStationRepository : ITrainStationRepository
+    +AddTrainStation(connection: SqlConnection)
+    -Add_Click(sender: object, e: EventArgs) : void
+}
+
+' Relationships
+Program --> MainWindow : creates
+
+MainWindow --> Transport : opens
+MainWindow --> Chooser : opens
+
+Transport --> AddStationAndLine : opens
+Transport --> AddShelter : opens
+Transport --> AddMetroStation : opens
+Transport --> AddTrainStation : opens
+Transport --> IStationRepository : uses
+Transport --> IReportRepository : uses
+Transport --> MarkdownReportWriter : uses
+
+AddStationAndLine --> IStationRepository : uses
+AddStationAndLine --> ILineRepository : uses
+AddStationAndLine --> IStationLineRepository : uses
+
+AddShelter --> IStationRepository : uses
+AddShelter --> IShelterRepository : uses
+
+AddMetroStation --> IStationRepository : uses
+AddMetroStation --> IMetroStationRepository : uses
+
+AddTrainStation --> IStationRepository : uses
+AddTrainStation --> ITrainStationRepository : uses
+
+StationRepository ..|> IStationRepository : implements
+LineRepository ..|> ILineRepository : implements
+MetroStationRepository ..|> IMetroStationRepository : implements
+TrainStationRepository ..|> ITrainStationRepository : implements
+ShelterRepository ..|> IShelterRepository : implements
+StationLineRepository ..|> IStationLineRepository : implements
+ReportRepository ..|> IReportRepository : implements
+
+IStationRepository --> StationRecord : returns
+ReportRepository --> TransportSummaryReport : returns
+MarkdownReportWriter --> TransportSummaryReport : uses
+
+@enduml

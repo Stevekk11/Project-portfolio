@@ -1,0 +1,266 @@
+﻿@startuml Transport Management System - State Diagram
+
+[*] --> ApplicationStart
+
+state ApplicationStart {
+    [*] --> ShowMainWindow
+    ShowMainWindow --> ConfigureConnection
+    
+    state ConfigureConnection {
+        [*] --> ChooseAuthMethod
+        
+        state ChooseAuthMethod <<choice>>
+        ChooseAuthMethod --> UseAppConfig : Use App.config
+        ChooseAuthMethod --> UseWindowsAuth : Windows Authentication
+        ChooseAuthMethod --> UseSQLAuth : SQL Authentication
+        
+        UseAppConfig : Server/DB/User fields disabled
+        UseAppConfig : Config name field enabled
+        
+        UseWindowsAuth : User/Password fields disabled
+        UseWindowsAuth : Server/DB fields enabled
+        
+        UseSQLAuth : All fields enabled
+        UseSQLAuth : Provide credentials manually
+        
+        UseAppConfig --> AttemptConnection
+        UseWindowsAuth --> AttemptConnection
+        UseSQLAuth --> AttemptConnection
+    }
+    
+    ConfigureConnection --> ValidateConnection
+    
+    state ValidateConnection <<choice>>
+    ValidateConnection --> ConnectionFailed : Connection Error
+    ValidateConnection --> ConnectionSuccess : Connected
+    
+    ConnectionFailed --> ConfigureConnection : Retry
+    ConnectionFailed --> [*] : Exit
+    
+    ConnectionSuccess --> CheckDatabase
+}
+
+state CheckDatabase <<choice>>
+CheckDatabase --> DopravaDatabaseMode : Database = "Doprava"
+CheckDatabase --> GenericDatabaseMode : Other Database
+
+state DopravaDatabaseMode {
+    [*] --> TransportMainMenu
+    
+    state TransportMainMenu {
+        [*] --> ShowOptions
+        ShowOptions : Add Station & Line
+        ShowOptions : Add Shelter
+        ShowOptions : Add Metro Station
+        ShowOptions : Add Train Station
+        ShowOptions : Import CSV
+        ShowOptions : Generate Report
+        ShowOptions : Database Editor
+        ShowOptions : Exit
+    }
+    
+    TransportMainMenu --> AddStationAndLine : User selects Add Station & Line
+    TransportMainMenu --> AddShelter : User selects Add Shelter
+    TransportMainMenu --> AddMetroStation : User selects Add Metro Station
+    TransportMainMenu --> AddTrainStation : User selects Add Train Station
+    TransportMainMenu --> ImportCSV : User selects Import CSV
+    TransportMainMenu --> GenerateReport : User selects Generate Report
+    TransportMainMenu --> DatabaseEditor : User selects Database Editor
+    TransportMainMenu --> ExitApplication : User selects Exit
+    
+    state AddStationAndLine {
+        [*] --> EnterStationData
+        EnterStationData --> EnterLineData
+        EnterLineData --> ValidateStationLine
+        
+        state ValidateStationLine <<choice>>
+        ValidateStationLine --> SaveStationLine : Valid
+        ValidateStationLine --> EnterStationData : Invalid Data
+        
+        SaveStationLine --> CreateStation
+        CreateStation --> GetOrCreateLine
+        GetOrCreateLine --> LinkStationToLine
+        LinkStationToLine --> ConfirmSuccess
+        ConfirmSuccess --> [*]
+    }
+    
+    state AddShelter {
+        [*] --> SelectExistingStation
+        SelectExistingStation --> EnterShelterDetails
+        EnterShelterDetails --> ValidateShelter
+        
+        state ValidateShelter <<choice>>
+        ValidateShelter --> SaveShelter : Valid
+        ValidateShelter --> EnterShelterDetails : Invalid Data
+        
+        SaveShelter --> ConfirmSuccess
+        ConfirmSuccess --> [*]
+    }
+    
+    state AddMetroStation {
+        [*] --> EnterStationData
+        EnterStationData --> EnterMetroSpecifics
+        EnterMetroSpecifics : Depth Underground
+        EnterMetroSpecifics : Cleaning Frequency
+        EnterMetroSpecifics : Has WC
+        EnterMetroSpecifics : Last Cleaning Date
+        EnterMetroSpecifics --> ValidateMetro
+        
+        state ValidateMetro <<choice>>
+        ValidateMetro --> SaveMetroStation : Valid
+        ValidateMetro --> EnterStationData : Invalid Data
+        
+        SaveMetroStation --> CreateStation
+        CreateStation --> CreateMetroDetails
+        CreateMetroDetails --> ConfirmSuccess
+        ConfirmSuccess --> [*]
+    }
+    
+    state AddTrainStation {
+        [*] --> EnterStationData
+        EnterStationData --> EnterTrainSpecifics
+        EnterTrainSpecifics : Platform Count
+        EnterTrainSpecifics : Is Electrified
+        EnterTrainSpecifics : Electrical System
+        EnterTrainSpecifics : Track Gauge
+        EnterTrainSpecifics --> ValidateTrain
+        
+        state ValidateTrain <<choice>>
+        ValidateTrain --> SaveTrainStation : Valid
+        ValidateTrain --> EnterStationData : Invalid Data
+        
+        SaveTrainStation --> CreateStation
+        CreateStation --> CreateTrainDetails
+        CreateTrainDetails --> ConfirmSuccess
+        ConfirmSuccess --> [*]
+    }
+    
+    state ImportCSV {
+        [*] --> SelectCSVFile
+        SelectCSVFile --> ParseCSVData
+        ParseCSVData --> ValidateCSVRecords
+        
+        state ValidateCSVRecords <<choice>>
+        ValidateCSVRecords --> ProcessRecords : Valid Format
+        ValidateCSVRecords --> ShowCSVError : Invalid Format
+        
+        ShowCSVError --> [*]
+        
+        ProcessRecords --> BeginTransaction
+        BeginTransaction --> ImportStationsAndLines
+        ImportStationsAndLines --> CheckImportResult
+        
+        state CheckImportResult <<choice>>
+        CheckImportResult --> CommitTransaction : Success
+        CheckImportResult --> RollbackTransaction : Error
+        
+        CommitTransaction --> ShowImportSuccess
+        RollbackTransaction --> ShowImportError
+        
+        ShowImportSuccess --> [*]
+        ShowImportError --> [*]
+    }
+    
+    state GenerateReport {
+        [*] --> QueryDatabase
+        QueryDatabase --> FetchTransportSummary
+        FetchTransportSummary --> SelectOutputFile
+        SelectOutputFile --> GenerateMarkdown
+        GenerateMarkdown --> SaveReportFile
+        SaveReportFile --> ShowReportSuccess
+        ShowReportSuccess --> [*]
+    }
+    
+    AddStationAndLine --> TransportMainMenu : Return
+    AddShelter --> TransportMainMenu : Return
+    AddMetroStation --> TransportMainMenu : Return
+    AddTrainStation --> TransportMainMenu : Return
+    ImportCSV --> TransportMainMenu : Return
+    GenerateReport --> TransportMainMenu : Return
+}
+
+state GenericDatabaseMode {
+    [*] --> DatabaseEditorOnly
+    
+    state DatabaseEditorOnly {
+        [*] --> ShowMessage
+        ShowMessage : Limited functionality
+        ShowMessage : Only database editor available
+        ShowMessage --> OpenEditor
+    }
+}
+
+state DatabaseEditor {
+    [*] --> LoadTablesList
+    LoadTablesList --> DisplayTables
+    DisplayTables --> WaitForSelection
+    
+    WaitForSelection --> LoadTableData : User selects table
+    WaitForSelection --> ExitEditor : User closes
+    
+    state LoadTableData {
+        [*] --> QueryTableData
+        QueryTableData --> DisplayInGrid
+        DisplayInGrid --> AllowEditing
+        
+        AllowEditing --> ValidateChanges : User modifies data
+        AllowEditing --> WaitForSelection : User selects another table
+        AllowEditing --> ExitEditor : User closes
+        
+        state ValidateChanges <<choice>>
+        ValidateChanges --> SaveChanges : Valid
+        ValidateChanges --> ShowError : Invalid
+        
+        SaveChanges --> UpdateDatabase
+        UpdateDatabase --> CheckUpdateResult
+        
+        state CheckUpdateResult <<choice>>
+        CheckUpdateResult --> ConfirmSave : Success
+        CheckUpdateResult --> ShowError : Failure
+        
+        ConfirmSave --> AllowEditing
+        ShowError --> AllowEditing
+    }
+    
+    ExitEditor --> [*]
+}
+
+DopravaDatabaseMode --> DatabaseEditor : Open Editor
+DatabaseEditor --> DopravaDatabaseMode : Return
+
+GenericDatabaseMode --> DatabaseEditor : Open Editor
+DatabaseEditor --> GenericDatabaseMode : Return
+
+state ExitApplication {
+    [*] --> CloseConnection
+    CloseConnection --> CleanupResources
+    CleanupResources --> [*]
+}
+
+ExitApplication --> [*]
+
+note right of ApplicationStart
+  Application starts with MainWindow
+  User configures database connection
+  Three authentication methods available
+end note
+
+note right of DopravaDatabaseMode
+  Full functionality available
+  when connected to Doprava database
+  All repositories and features enabled
+end note
+
+note right of GenericDatabaseMode
+  Limited functionality
+  Only database editor available
+  for non-Doprava databases
+end note
+
+note right of DatabaseEditor
+  Universal editor for any database
+  Allows viewing and editing
+  all tables directly
+end note
+
+@enduml

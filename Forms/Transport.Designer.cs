@@ -264,7 +264,7 @@ partial class Transport
         label2.TabIndex = 24;
         label2.Text = "číslo";
         // 
-        // button1
+        // EditorBtn
         // 
         EditorBtn.Location = new System.Drawing.Point(732, 273);
         EditorBtn.Name = "EditorBtn";
@@ -272,7 +272,6 @@ partial class Transport
         EditorBtn.TabIndex = 25;
         EditorBtn.Text = "Editor dat";
         EditorBtn.UseVisualStyleBackColor = true;
-        EditorBtn.Click += EditorBtn_Click;
         // 
         // Transport
         // 
