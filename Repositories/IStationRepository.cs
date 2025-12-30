@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 
 namespace DatabazeProjekt.Repositories
 {
@@ -9,6 +10,7 @@ namespace DatabazeProjekt.Repositories
         StationRecord GetStationByName(string name);
         IEnumerable<StationRecord> GetAllStations();
         int AddStationAndReturnId(StationRecord station);
+        int AddStationAndReturnId(StationRecord station, SqlTransaction? transaction);
         int GetStationIdByName(string name);
     }
 }

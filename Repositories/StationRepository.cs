@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 
 namespace DatabazeProjekt.Repositories
@@ -20,11 +20,17 @@ namespace DatabazeProjekt.Repositories
 
         public int AddStationAndReturnId(StationRecord station)
         {
+            return AddStationAndReturnId(station, null);
+        }
+
+        public int AddStationAndReturnId(StationRecord station, SqlTransaction? transaction)
+        {
             const string insertQuery = "INSERT INTO dbo.stanice (nazev, typ_stanice, ma_pristresek, ma_lavicku, ma_kos, ma_infopanel, na_znameni, bezbarierova) " +
                                        "OUTPUT INSERTED.id_stanice " +
                                        "VALUES (@stationname, @stationtype, @hasshelter, @hasbench, @hastrashbin, @hasinfopanel, @requeststop, @barrierfree);";
             using (SqlCommand cmd = new SqlCommand(insertQuery, _connection))
             {
+                if (transaction != null) cmd.Transaction = transaction;
                 cmd.Parameters.AddWithValue("@stationname", station.StationName);
                 cmd.Parameters.AddWithValue("@stationtype", station.StationType);
                 cmd.Parameters.AddWithValue("@hasshelter", station.HasShelter);

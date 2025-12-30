@@ -1,4 +1,4 @@
-﻿using DatabazeProjekt.Repositories;
+﻿﻿using DatabazeProjekt.Repositories;
 using Microsoft.Data.SqlClient;
 
 namespace DatabazeProjekt;
@@ -27,43 +27,49 @@ public partial class AddStationAndLine : Form
     /// <param name="e"></param>
     private void odeslat_Click(object sender, EventArgs e)
     {
-        try
+        using (SqlTransaction transaction = connection.BeginTransaction())
         {
-            string stationName = nazevStanice.Text;
-            string stationType = typStanice.Text;
-            bool hasShelter = prist.Checked;
-            bool hasBench = lavice.Checked;
-            bool hasTrashBin = kos.Checked;
-            bool hasInfoPanel = infop.Checked;
-            bool requestStop = naznam.Checked;
-            bool barrierFree = bezba.Checked;
-            int lineNumber = Convert.ToInt32(cisloLinky.Text);
-            string lineName = nazevLinky.Text;
-
-            var station = new StationRecord
+            try
             {
-                StationName = stationName,
-                StationType = stationType,
-                HasShelter = hasShelter,
-                HasBench = hasBench,
-                HasTrashBin = hasTrashBin,
-                HasInfoPanel = hasInfoPanel,
-                RequestStop = requestStop,
-                BarrierFree = barrierFree
-            };
+                string stationName = nazevStanice.Text;
+                string stationType = typStanice.Text;
+                bool hasShelter = prist.Checked;
+                bool hasBench = lavice.Checked;
+                bool hasTrashBin = kos.Checked;
+                bool hasInfoPanel = infop.Checked;
+                bool requestStop = naznam.Checked;
+                bool barrierFree = bezba.Checked;
+                int lineNumber = Convert.ToInt32(cisloLinky.Text);
+                string lineName = nazevLinky.Text;
 
-            int stationId = _stationRepository.AddStationAndReturnId(station);
-            int lineId = _lineRepository.GetOrCreateLineId(lineNumber, lineName);
-            _stationLineRepository.AddStationToLine(stationId, lineId);
+                var station = new StationRecord
+                {
+                    StationName = stationName,
+                    StationType = stationType,
+                    HasShelter = hasShelter,
+                    HasBench = hasBench,
+                    HasTrashBin = hasTrashBin,
+                    HasInfoPanel = hasInfoPanel,
+                    RequestStop = requestStop,
+                    BarrierFree = barrierFree
+                };
 
-            MessageBox.Show("Stanice i linka byly přidány.", "Úspěch", MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
-            this.Close();
-        }
-        catch (Exception exception)
-        {
-            MessageBox.Show($"An error occurred: {exception.Message}", "Error", MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
+                int stationId = _stationRepository.AddStationAndReturnId(station, transaction);
+                int lineId = _lineRepository.GetOrCreateLineId(lineNumber, lineName, transaction);
+                _stationLineRepository.AddStationToLine(stationId, lineId, transaction);
+
+                transaction.Commit();
+
+                MessageBox.Show("Stanice i linka byly přidány.", "Úspěch", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                this.Close();
+            }
+            catch (Exception exception)
+            {
+                transaction.Rollback();
+                MessageBox.Show($"An error occurred: {exception.Message}", "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+﻿﻿using Microsoft.Data.SqlClient;
 
 namespace DatabazeProjekt.Repositories;
 
@@ -13,6 +13,11 @@ public sealed class LineRepository : ILineRepository
 
     public int GetOrCreateLineId(int lineNumber, string lineName)
     {
+        return GetOrCreateLineId(lineNumber, lineName, null);
+    }
+
+    public int GetOrCreateLineId(int lineNumber, string lineName, SqlTransaction? transaction)
+    {
         const string query = @"
             IF NOT EXISTS (SELECT 1 FROM linky WHERE cislo_linky = @LineNumber)
             BEGIN
@@ -26,10 +31,10 @@ public sealed class LineRepository : ILineRepository
             END";
 
         using var cmd = new SqlCommand(query, _connection);
+        if (transaction != null) cmd.Transaction = transaction;
         cmd.Parameters.AddWithValue("@LineNumber", lineNumber);
         cmd.Parameters.AddWithValue("@LineName", lineName ?? string.Empty);
 
         return (int)cmd.ExecuteScalar();
     }
 }
-
