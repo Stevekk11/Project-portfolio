@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using DatabazeProjekt.Repositories;
+using DatabazeProjekt.Reports;
 
 namespace DatabazeProjekt;
 /// <summary>
@@ -9,12 +10,14 @@ public partial class Transport : Form
 {
     private SqlConnection _connection;
     private IStationRepository _stationRepository;
+    private IReportRepository _reportRepository;
 
     public Transport(SqlConnection connection)
     {
         InitializeComponent();
         this._connection = connection;
         this._stationRepository = new StationRepository(connection);
+        this._reportRepository = new ReportRepository(connection);
     }
 
     /// <summary>
@@ -157,5 +160,41 @@ public partial class Transport : Form
         {
             MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+    }
+
+    private void Report_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            using var sfd = new SaveFileDialog
+            {
+                Filter = "Markdown (*.md)|*.md|All files (*.*)|*.*",
+                Title = "Uložit souhrnný report",
+                FileName = $"doprava-report-{DateTime.Now:yyyyMMdd-HHmm}.md",
+                AddExtension = true,
+                DefaultExt = "md"
+            };
+
+            if (sfd.ShowDialog() != DialogResult.OK)
+                return;
+
+            var report = _reportRepository.GetTransportSummaryReport();
+            var md = MarkdownReportWriter.ToMarkdown(report);
+            File.WriteAllText(sfd.FileName, md, System.Text.Encoding.UTF8);
+
+            MessageBox.Show($"Report uložen do:\n{sfd.FileName}", "Hotovo", MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Nepodařilo se vygenerovat report: {ex.Message}", "Chyba", MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+        }
+    }
+
+    private void EditorBtn_Click(object sender, EventArgs e)
+    {
+        Chooser chooser = new Chooser(_connection);
+        chooser.Show();
     }
 }
