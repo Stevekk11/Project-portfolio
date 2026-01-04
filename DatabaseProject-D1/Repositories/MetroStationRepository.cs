@@ -25,5 +25,17 @@ public sealed class MetroStationRepository : IMetroStationRepository
         cmd.Parameters.AddWithValue("@datumUklidu", lastCleaningDate);
         cmd.ExecuteNonQuery();
     }
-}
 
+    public bool TryDeleteMetroStationByStationName(string stationName)
+    {
+        const string query = @"
+DELETE ms
+FROM dbo.metro_stanice ms
+INNER JOIN dbo.stanice s ON s.id_stanice = ms.stanice_id
+WHERE s.nazev = @name";
+
+        using var cmd = new SqlCommand(query, _connection);
+        cmd.Parameters.AddWithValue("@name", stationName);
+        return cmd.ExecuteNonQuery() > 0;
+    }
+}

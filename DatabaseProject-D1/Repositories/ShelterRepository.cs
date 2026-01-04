@@ -1,4 +1,4 @@
-﻿using System.Data;
+﻿﻿using System.Data;
 using Microsoft.Data.SqlClient;
 
 namespace DatabazeProjekt.Repositories;
@@ -26,5 +26,18 @@ public sealed class ShelterRepository : IShelterRepository
         cmd.Parameters.AddWithValue("@spravce", administrator ?? string.Empty);
         cmd.Parameters.Add("@datum_vyr", SqlDbType.DateTime).Value = manufacturingDate;
         cmd.ExecuteNonQuery();
+    }
+
+    public bool TryDeleteShelterByStationName(string stationName)
+    {
+        const string query = @"
+DELETE p
+FROM dbo.pristresek p
+INNER JOIN dbo.stanice s ON s.id_stanice = p.stanice_id
+WHERE s.nazev = @name";
+
+        using var cmd = new SqlCommand(query, _connection);
+        cmd.Parameters.AddWithValue("@name", stationName);
+        return cmd.ExecuteNonQuery() > 0;
     }
 }

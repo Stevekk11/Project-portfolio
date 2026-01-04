@@ -26,4 +26,17 @@ public sealed class TrainStationRepository : ITrainStationRepository
         cmd.Parameters.AddWithValue("@soustava", electricalSystem ?? string.Empty);
         cmd.ExecuteNonQuery();
     }
+
+    public bool TryDeleteTrainStationByStationName(string stationName)
+    {
+        const string query = @"
+DELETE vs
+FROM dbo.vlak_stanice vs
+INNER JOIN dbo.stanice s ON s.id_stanice = vs.stanice_id
+WHERE s.nazev = @name";
+
+        using var cmd = new SqlCommand(query, _connection);
+        cmd.Parameters.AddWithValue("@name", stationName);
+        return cmd.ExecuteNonQuery() > 0;
+    }
 }

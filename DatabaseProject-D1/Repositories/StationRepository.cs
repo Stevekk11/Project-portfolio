@@ -1,4 +1,4 @@
-﻿﻿using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 
 namespace DatabazeProjekt.Repositories
@@ -51,6 +51,14 @@ namespace DatabazeProjekt.Repositories
                 cmd.Parameters.AddWithValue("@name", name);
                 cmd.ExecuteNonQuery();
             }
+        }
+
+        public bool TryDeleteStationByName(string name)
+        {
+            const string deleteQuery = "DELETE FROM dbo.stanice WHERE nazev = @name";
+            using var cmd = new SqlCommand(deleteQuery, _connection);
+            cmd.Parameters.AddWithValue("@name", name);
+            return cmd.ExecuteNonQuery() > 0;
         }
 
         public StationRecord GetStationByName(string name)

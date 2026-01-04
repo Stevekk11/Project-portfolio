@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 
 namespace DatabazeProjekt.Repositories
@@ -7,6 +7,10 @@ namespace DatabazeProjekt.Repositories
     {
         void AddStation(StationRecord station);
         void DeleteStationByName(string name);
+
+        // Returns true if a row was deleted, false if nothing matched.
+        bool TryDeleteStationByName(string name);
+
         StationRecord GetStationByName(string name);
         IEnumerable<StationRecord> GetAllStations();
         int AddStationAndReturnId(StationRecord station);

@@ -1,4 +1,5 @@
 ﻿-- this script creates the database schema for a public transportation system, made for MS SQL Server.
+-- IMPORTANT: run each "go" separated block individually, if running in SSMS!
 create database doprava;
 go
 use doprava
@@ -137,7 +138,7 @@ from dbo.linky l
          left join dbo.stanice s on sl.stanice_id = s.id_stanice
          left join dbo.metro_stanice ms on s.id_stanice = ms.stanice_id
 group by l.id_linky, l.cislo_linky, l.nazev_linky
-
+go
 CREATE TRIGGER TR_metro_station_type
     ON dbo.metro_stanice
     AFTER INSERT, UPDATE AS
@@ -150,7 +151,7 @@ BEGIN
             RAISERROR ('Stanice must be of type metro.', 16, 1); ROLLBACK;
         END
 END;
-
+go
 CREATE TRIGGER TR_train_station_type
         ON dbo.vlak_stanice
         AFTER INSERT, UPDATE AS

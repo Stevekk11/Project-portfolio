@@ -1,4 +1,6 @@
-﻿using System.Configuration;
+﻿using System.ComponentModel;
+using System.Configuration;
+using DatabazeProjekt.Forms;
 using Microsoft.Data.SqlClient;
 
 namespace DatabazeProjekt;

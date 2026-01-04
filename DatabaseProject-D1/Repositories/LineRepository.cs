@@ -1,4 +1,4 @@
-﻿﻿using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 
 namespace DatabazeProjekt.Repositories;
 
@@ -36,5 +36,13 @@ public sealed class LineRepository : ILineRepository
         cmd.Parameters.AddWithValue("@LineName", lineName ?? string.Empty);
 
         return (int)cmd.ExecuteScalar();
+    }
+
+    public bool TryDeleteLineByNumber(int lineNumber)
+    {
+        const string query = "DELETE FROM dbo.linky WHERE cislo_linky = @LineNumber";
+        using var cmd = new SqlCommand(query, _connection);
+        cmd.Parameters.AddWithValue("@LineNumber", lineNumber);
+        return cmd.ExecuteNonQuery() > 0;
     }
 }

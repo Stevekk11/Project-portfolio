@@ -9,4 +9,7 @@ public interface ILineRepository
     /// </summary>
     int GetOrCreateLineId(int lineNumber, string lineName);
     int GetOrCreateLineId(int lineNumber, string lineName, SqlTransaction? transaction);
+
+    // Returns true if a row was deleted.
+    bool TryDeleteLineByNumber(int lineNumber);
 }
