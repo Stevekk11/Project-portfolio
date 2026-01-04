@@ -45,11 +45,11 @@ A generic database viewer that allows you to select any table in the database an
 ## Diagrams
 
 ### Class Diagram
-![Class Diagram](Diagrams/class-diagram.puml)
+![Class Diagram](Diagrams/class-diagram-0.png)
 *(See `Diagrams/class-diagram.puml`)*
 
 ### State Diagram
-![State Diagram](Diagrams/state-diagram.puml)
+![State Diagram](Diagrams/state-diagram-0.png)
 *(See `Diagrams/state-diagram.puml`)*
 
 ## Project Structure
