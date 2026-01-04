@@ -9,6 +9,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <None Update="create-database.sql">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="App.config">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
       <Compile Update="Doprava.cs">
         <SubType>Form</SubType>
       </Compile>
