@@ -45,11 +45,11 @@ A generic database viewer that allows you to select any table in the database an
 ## Diagrams
 
 ### Class Diagram
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/your-repo/Diagrams/class-diagram.puml)
+![Class Diagram](Diagrams/class-diagram.puml)
 *(See `Diagrams/class-diagram.puml`)*
 
 ### State Diagram
-![State Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/your-repo/Diagrams/state-diagram.puml)
+![State Diagram](Diagrams/state-diagram.puml)
 *(See `Diagrams/state-diagram.puml`)*
 
 ## Project Structure
