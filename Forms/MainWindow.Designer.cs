@@ -1,4 +1,4 @@
-﻿﻿
+﻿
 using System.ComponentModel;
 
 namespace DatabazeProjekt;
@@ -81,91 +81,91 @@ partial class MainWindow
         LoadDB.BackColor = System.Drawing.Color.CornflowerBlue;
         LoadDB.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)238));
         LoadDB.ForeColor = System.Drawing.Color.White;
-        LoadDB.Location = new System.Drawing.Point(20, 625);
+        LoadDB.Location = new System.Drawing.Point(20, 676);
         LoadDB.Name = "LoadDB";
         LoadDB.Size = new System.Drawing.Size(370, 50);
         LoadDB.TabIndex = 2;
         LoadDB.Text = "Připojit k databázi";
         LoadDB.UseVisualStyleBackColor = false;
         LoadDB.Click += LoadDB_Click;
-        // 
+        //
         // ServerLabel
-        // 
+        //
         ServerLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
         ServerLabel.Location = new System.Drawing.Point(15, 30);
         ServerLabel.Name = "ServerLabel";
         ServerLabel.Size = new System.Drawing.Size(300, 20);
         ServerLabel.TabIndex = 3;
         ServerLabel.Text = "Server:";
-        // 
+        //
         // DBlabel
-        // 
+        //
         DBlabel.Font = new System.Drawing.Font("Segoe UI", 10F);
         DBlabel.Location = new System.Drawing.Point(15, 85);
         DBlabel.Name = "DBlabel";
         DBlabel.Size = new System.Drawing.Size(300, 20);
         DBlabel.TabIndex = 4;
         DBlabel.Text = "Databáze:";
-        // 
+        //
         // UsernameField
-        // 
+        //
         UsernameField.Location = new System.Drawing.Point(200, 170);
         UsernameField.Name = "UsernameField";
         UsernameField.Size = new System.Drawing.Size(515, 25);
         UsernameField.TabIndex = 6;
-        // 
+        //
         // UsernameLabel
-        // 
+        //
         UsernameLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
         UsernameLabel.Location = new System.Drawing.Point(40, 175);
         UsernameLabel.Name = "UsernameLabel";
         UsernameLabel.Size = new System.Drawing.Size(150, 20);
         UsernameLabel.TabIndex = 7;
         UsernameLabel.Text = "Uživatelské jméno:";
-        // 
+        //
         // PasswordField
-        // 
+        //
         PasswordField.Location = new System.Drawing.Point(200, 205);
         PasswordField.Name = "PasswordField";
         PasswordField.Size = new System.Drawing.Size(515, 25);
         PasswordField.TabIndex = 8;
         PasswordField.UseSystemPasswordChar = true;
-        // 
+        //
         // PasswordLabel
-        // 
+        //
         PasswordLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
         PasswordLabel.Location = new System.Drawing.Point(40, 210);
         PasswordLabel.Name = "PasswordLabel";
         PasswordLabel.Size = new System.Drawing.Size(150, 20);
         PasswordLabel.TabIndex = 9;
         PasswordLabel.Text = "Heslo:";
-        // 
+        //
         // ExitDB
-        // 
+        //
         ExitDB.BackColor = System.Drawing.Color.LightGray;
         ExitDB.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)238));
-        ExitDB.Location = new System.Drawing.Point(410, 625);
+        ExitDB.Location = new System.Drawing.Point(410, 676);
         ExitDB.Name = "ExitDB";
         ExitDB.Size = new System.Drawing.Size(370, 50);
         ExitDB.TabIndex = 10;
         ExitDB.Text = "Zavřít aplikaci";
         ExitDB.UseVisualStyleBackColor = false;
         ExitDB.Click += ExitDB_Click;
-        // 
+        //
         // ErrorField
-        // 
+        //
         ErrorField.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         ErrorField.BackColor = System.Drawing.Color.White;
         ErrorField.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
         ErrorField.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)238));
         ErrorField.ForeColor = System.Drawing.Color.DarkRed;
-        ErrorField.Location = new System.Drawing.Point(20, 720);
+        ErrorField.Location = new System.Drawing.Point(20, 795);
         ErrorField.Name = "ErrorField";
         ErrorField.Size = new System.Drawing.Size(760, 100);
         ErrorField.TabIndex = 11;
-        // 
+        //
         // Doprava
-        // 
+        //
         Doprava.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)238));
         Doprava.Location = new System.Drawing.Point(20, 30);
         Doprava.Name = "Doprava";
@@ -174,18 +174,18 @@ partial class MainWindow
         Doprava.Text = "Doprava - použít připojení z App.config";
         Doprava.UseVisualStyleBackColor = true;
         Doprava.Click += Doprava_Click;
-        // 
+        //
         // WinAuth
-        // 
+        //
         WinAuth.Location = new System.Drawing.Point(15, 145);
         WinAuth.Name = "WinAuth";
         WinAuth.Size = new System.Drawing.Size(700, 30);
         WinAuth.TabIndex = 18;
         WinAuth.Text = "Ověření Windows (Integrated Security)";
         WinAuth.UseVisualStyleBackColor = true;
-        // 
+        //
         // ConnStr
-        // 
+        //
         ConnStr.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
         ConnStr.Location = new System.Drawing.Point(20, 30);
         ConnStr.Name = "ConnStr";
@@ -193,27 +193,27 @@ partial class MainWindow
         ConnStr.TabIndex = 19;
         ConnStr.Text = "Použít název připojovacího řetězce z App.config";
         ConnStr.UseVisualStyleBackColor = true;
-        // 
+        //
         // label2
-        // 
+        //
         label2.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)238));
         label2.Location = new System.Drawing.Point(40, 68);
         label2.Name = "label2";
         label2.Size = new System.Drawing.Size(200, 25);
         label2.TabIndex = 20;
         label2.Text = "Název z App.config:";
-        // 
+        //
         // ConfigName
-        // 
+        //
         ConfigName.Enabled = false;
         ConfigName.Location = new System.Drawing.Point(250, 65);
         ConfigName.Name = "ConfigName";
         ConfigName.Size = new System.Drawing.Size(490, 27);
         ConfigName.TabIndex = 21;
         ConfigName.Text = "Doprava";
-        // 
+        //
         // connAuthGroup
-        // 
+        //
         connAuthGroup.Controls.Add(ServerLabel);
         connAuthGroup.Controls.Add(ServerField);
         connAuthGroup.Controls.Add(DBlabel);
@@ -224,39 +224,39 @@ partial class MainWindow
         connAuthGroup.Controls.Add(PasswordLabel);
         connAuthGroup.Controls.Add(PasswordField);
         connAuthGroup.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)238));
-        connAuthGroup.Location = new System.Drawing.Point(20, 20);
+        connAuthGroup.Location = new System.Drawing.Point(20, 26);
         connAuthGroup.Name = "connAuthGroup";
-        connAuthGroup.Size = new System.Drawing.Size(730, 234);
+        connAuthGroup.Size = new System.Drawing.Size(730, 270);
         connAuthGroup.TabIndex = 104;
         connAuthGroup.TabStop = false;
         connAuthGroup.Text = "Přihlašovací údaje";
-        // 
+        //
         // customConnGroup
-        // 
+        //
         customConnGroup.Controls.Add(connAuthGroup);
         customConnGroup.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)238));
-        customConnGroup.Location = new System.Drawing.Point(20, 194);
+        customConnGroup.Location = new System.Drawing.Point(20, 181);
         customConnGroup.Name = "customConnGroup";
-        customConnGroup.Size = new System.Drawing.Size(760, 266);
+        customConnGroup.Size = new System.Drawing.Size(760, 319);
         customConnGroup.TabIndex = 103;
         customConnGroup.TabStop = false;
         customConnGroup.Text = "Vlastní připojení k databázi";
-        // 
+        //
         // configConnGroup
-        // 
+        //
         configConnGroup.Controls.Add(ConnStr);
         configConnGroup.Controls.Add(label2);
         configConnGroup.Controls.Add(ConfigName);
         configConnGroup.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)238));
-        configConnGroup.Location = new System.Drawing.Point(20, 475);
+        configConnGroup.Location = new System.Drawing.Point(20, 506);
         configConnGroup.Name = "configConnGroup";
-        configConnGroup.Size = new System.Drawing.Size(760, 130);
+        configConnGroup.Size = new System.Drawing.Size(760, 164);
         configConnGroup.TabIndex = 105;
         configConnGroup.TabStop = false;
         configConnGroup.Text = "Připojení z konfigurace";
-        // 
+        //
         // presetGroup
-        // 
+        //
         presetGroup.Controls.Add(Doprava);
         presetGroup.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)238));
         presetGroup.Location = new System.Drawing.Point(20, 85);
@@ -265,38 +265,38 @@ partial class MainWindow
         presetGroup.TabIndex = 102;
         presetGroup.TabStop = false;
         presetGroup.Text = "Předdefinované databáze";
-        // 
+        //
         // titleLabel
-        // 
+        //
         titleLabel.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)238));
         titleLabel.Location = new System.Drawing.Point(20, 15);
         titleLabel.Name = "titleLabel";
         titleLabel.Size = new System.Drawing.Size(600, 50);
         titleLabel.TabIndex = 100;
         titleLabel.Text = "Správa databází";
-        // 
+        //
         // errorTitleLabel
-        // 
+        //
         errorTitleLabel.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)238));
-        errorTitleLabel.Location = new System.Drawing.Point(20, 690);
+        errorTitleLabel.Location = new System.Drawing.Point(20, 745);
         errorTitleLabel.Name = "errorTitleLabel";
         errorTitleLabel.Size = new System.Drawing.Size(400, 25);
         errorTitleLabel.TabIndex = 106;
         errorTitleLabel.Text = "Chybové zprávy:";
-        // 
+        //
         // separatorLine
-        // 
+        //
         separatorLine.BackColor = System.Drawing.Color.LightGray;
         separatorLine.Location = new System.Drawing.Point(20, 70);
         separatorLine.Name = "separatorLine";
         separatorLine.Size = new System.Drawing.Size(760, 2);
         separatorLine.TabIndex = 101;
-        // 
+        //
         // MainWindow
-        // 
-        AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
+        //
+        AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        ClientSize = new System.Drawing.Size(800, 835);
+        ClientSize = new System.Drawing.Size(800, 938);
         Controls.Add(errorTitleLabel);
         Controls.Add(ErrorField);
         Controls.Add(configConnGroup);
