@@ -59,7 +59,7 @@ partial class Chooser
         TableSelectLabel.Name = "TableSelectLabel";
         TableSelectLabel.Size = new System.Drawing.Size(294, 38);
         TableSelectLabel.TabIndex = 1;
-        TableSelectLabel.Text = "Choose a table to work with:";
+        TableSelectLabel.Text = "Vyberte tabulku z databáze:";
         // 
         // Add
         // 
@@ -68,7 +68,7 @@ partial class Chooser
         Add.Name = "Add";
         Add.Size = new System.Drawing.Size(187, 54);
         Add.TabIndex = 2;
-        Add.Text = "Add Info";
+        Add.Text = "Přidat";
         Add.UseVisualStyleBackColor = true;
         Add.Click += Add_Click;
         // 
@@ -79,7 +79,7 @@ partial class Chooser
         Delete.Name = "Delete";
         Delete.Size = new System.Drawing.Size(185, 53);
         Delete.TabIndex = 3;
-        Delete.Text = "Delete info";
+        Delete.Text = "Smazat";
         Delete.UseVisualStyleBackColor = true;
         Delete.Click += Delete_Click;
         // 
@@ -100,7 +100,7 @@ partial class Chooser
         Save.Name = "Save";
         Save.Size = new System.Drawing.Size(184, 44);
         Save.TabIndex = 6;
-        Save.Text = "Save changes";
+        Save.Text = "Uložit";
         Save.UseVisualStyleBackColor = false;
         Save.Click += Save_Click;
         // 
@@ -112,7 +112,7 @@ partial class Chooser
         Import.Name = "Import";
         Import.Size = new System.Drawing.Size(184, 42);
         Import.TabIndex = 7;
-        Import.Text = "Import From CSV...";
+        Import.Text = "Importuj z CSV";
         Import.UseVisualStyleBackColor = true;
         Import.Click += Import_Click;
         // 
@@ -122,7 +122,7 @@ partial class Chooser
         label1.Name = "label1";
         label1.Size = new System.Drawing.Size(151, 17);
         label1.TabIndex = 8;
-        label1.Text = "use ; in csv";
+        label1.Text = "použij ; v csv";
         // 
         // Exit
         // 
@@ -132,7 +132,7 @@ partial class Chooser
         Exit.Name = "Exit";
         Exit.Size = new System.Drawing.Size(184, 44);
         Exit.TabIndex = 9;
-        Exit.Text = "Exit";
+        Exit.Text = "Odejít";
         Exit.UseVisualStyleBackColor = false;
         Exit.Click += Exit_Click;
         // 

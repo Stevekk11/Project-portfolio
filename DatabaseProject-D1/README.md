@@ -35,6 +35,29 @@ This is the main interface for the "Doprava" database.
 - **Add Shelter**: Add a shelter to an existing station.
 - **Add Metro Station**: Add specific details for a metro station.
 - **Import CSV**: Import station data from a CSV file.
+
+#### CSV Import Format
+The CSV file should use semicolon (`;`) as the delimiter by default. The expected columns are:
+
+- `StationName` (string)
+- `StationType` (string)
+- `HasShelter` (boolean: true/false)
+- `HasBench` (boolean: true/false)
+- `HasTrashBin` (boolean: true/false)
+- `HasInfoPanel` (boolean: true/false)
+- `RequestStop` (boolean: true/false)
+- `BarrierFree` (boolean: true/false)
+- `LineNumber` (integer)
+- `LineName` (string)
+
+Example CSV content:
+
+```
+StationName;StationType;HasShelter;HasBench;HasTrashBin;HasInfoPanel;RequestStop;BarrierFree;LineNumber;LineName
+Central Station;Train;true;true;false;true;false;true;1;Main Line
+Metro Stop;Metro;false;true;true;false;true;false;2;Blue Line
+```
+
 - **Reports**: View summaries and reports.
 
 ### 3. Database Chooser (Chooser)
@@ -52,6 +75,8 @@ A generic database viewer that allows you to select any table in the database an
 ![State Diagram](Diagrams/state-diagram-0.png)
 *(See `Diagrams/state-diagram.puml`)*
 
+## ER Diagram
+![ER Diagram](Diagrams/ER%20Diagram.png)
 ## Project Structure
 
 - **Forms/**: Contains all Windows Forms (UI).
@@ -59,4 +84,3 @@ A generic database viewer that allows you to select any table in the database an
 - **Reports/**: Logic for generating reports.
 - **Diagrams/**: PlantUML diagrams.
 - **Blackbox testing/**: Test case documentation.
-
