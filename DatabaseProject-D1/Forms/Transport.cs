@@ -11,6 +11,7 @@ public partial class Transport : Form
     private IReportRepository _reportRepository;
 
     private ILineRepository _lineRepository;
+    private IStationLineRepository _stationLineRepository;
     private IShelterRepository _shelterRepository;
     private IMetroStationRepository _metroStationRepository;
     private ITrainStationRepository _trainStationRepository;
@@ -25,6 +26,7 @@ public partial class Transport : Form
         this._reportRepository = new ReportRepository(connection);
 
         _lineRepository = new LineRepository(connection);
+        _stationLineRepository = new StationLineRepository(connection);
         _shelterRepository = new ShelterRepository(connection);
         _metroStationRepository = new MetroStationRepository(connection);
         _trainStationRepository = new TrainStationRepository(connection);
@@ -135,16 +137,50 @@ public partial class Transport : Form
         using (var reader = new StreamReader(filePath, System.Text.Encoding.UTF8))
         using (var csvData = new CsvHelper.CsvReader(reader, config))
         {
-            var records = csvData.GetRecords<StationRecord>().ToList();
             config.HeaderValidated = null;
+            var records = csvData.GetRecords<StationRecord>().ToList();
+
+            var insertedRows = 0;
+
             foreach (var record in records)
             {
-                // Use repository for station insert
-                _stationRepository.AddStation(record);
-                // ...existing code for linking lines, etc. (can be refactored into repositories as well)...
+
+                record.StationName = (record.StationName ?? string.Empty).Trim();
+                record.StationType = (record.StationType ?? string.Empty).Trim();
+                record.LineName = (record.LineName ?? string.Empty).Trim();
+
+                if (string.IsNullOrWhiteSpace(record.StationName))
+                    throw new InvalidOperationException("Import CSV: Pole StationName je povinné.");
+
+                if (string.IsNullOrWhiteSpace(record.StationType))
+                    throw new InvalidOperationException($"Import CSV: Pro stanici je vyžadován StationType. '{record.StationName}'.");
+
+                if (record.LineNumber <= 0)
+                    throw new InvalidOperationException($"Import CSV: Číslo linky musí být kladné celé číslo pro stanici '{record.StationName}'.");
+
+                using (var transaction = _connection.BeginTransaction())
+                {
+                    try
+                    {
+
+                        var stationId = _stationRepository.AddStationAndReturnId(record, transaction);
+                        var lineId = _lineRepository.GetOrCreateLineId(record.LineNumber, record.LineName, transaction);
+                        _stationLineRepository.AddStationToLine(stationId, lineId, transaction);
+
+                        transaction.Commit();
+                        insertedRows++;
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
             }
+
+            MessageBox.Show($"Data byla vložena. Importováno řádků: {insertedRows}.", "Info", MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
-        MessageBox.Show("Data byla vložena.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 
     private void vlak_Click(object sender, EventArgs e)

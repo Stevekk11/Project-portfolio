@@ -11,6 +11,8 @@ This application is a Windows Forms application for managing a public transport 
 
 1.  **Database Setup**:
     - Open Microsoft SQL Server Management Studio (SSMS).
+    - Login to your SQL Server instance.
+    - Update the connection string in `App.config` if necessary to match your server settings.
     - Open the `create-database.sql` script located in the root of this repository.
     - Execute the script to create the `doprava` database and its schema.
 
@@ -54,8 +56,8 @@ Example CSV content:
 
 ```
 StationName;StationType;HasShelter;HasBench;HasTrashBin;HasInfoPanel;RequestStop;BarrierFree;LineNumber;LineName
-Central Station;Train;true;true;false;true;false;true;1;Main Line
-Metro Stop;Metro;false;true;true;false;true;false;2;Blue Line
+Central Station;vlak;true;true;false;true;false;true;1;Main Line
+Metro Stop;metro;false;true;true;false;true;false;2;Blue Line
 ```
 
 - **Reports**: View summaries and reports.
