@@ -8,3 +8,5 @@ Mass Image Editor.
 
 DatabaseProject-D1.
 
+## Download the latest releases in the Release tab.
+
