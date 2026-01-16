@@ -11,7 +11,7 @@ node "Klientská zóna" {
 node "Bankovní Server (Node.js)" {
 
     component "TCP Server (net module) - event loop" as NetLayer
-    component "Command Processor" as Logic
+    component "Command Processor & handler" as Logic
     component "Config Manager" as Config
     component "Log Manager (Winston)" as Logger
     component "FileSystem Provider (fs/promises)" as FS
@@ -24,15 +24,13 @@ node "Bankovní Server (Node.js)" {
 file "app_config.json" as ConfigFile
 file "bank.log" as LogFile
 
-' Vztahy
 Client --> NetLayer : TCP/IP (Raw Text utf8)
 NetLayer <--> Logic : Stream dat
 Logic --> Config : Načítá timeouty/port
 Config ..> ConfigFile : Čte JSON
 
 Logic --> FS : CRUD operace účtů
-FS <--> Storage : Čtení/Zápis balance
-
+FS <--> Storage : Čtení/Zápis zůstatku
 Logic --> Logger : Loguje události
 Logger ..> LogFile : Rotující zápis
 

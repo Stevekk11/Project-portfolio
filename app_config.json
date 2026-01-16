@@ -1,0 +1,11 @@
+{
+  "PORT": 7000,
+  "HOST": "0.0.0.0",
+  "RESPONSE_TIMEOUT": 5000,
+  "CLIENT_IDLE_TIMEOUT": 60000,
+  "ACCOUNTS_DIR": "./accounts",
+  "LOG_FILE": "./logs/bank.log",
+  "LOG_MAX_SIZE": "15m",
+  "LOG_MAX_FILES": 5,
+  "DATE_FORMAT": "YYYY-MM-DD HH:mm:ss"
+}
