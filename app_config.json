@@ -6,6 +6,7 @@
   "ACCOUNTS_DIR": "./accounts",
   "LOG_FILE": "./logs/bank.log",
   "LOG_MAX_SIZE": "15m",
-  "LOG_MAX_FILES": 5,
-  "DATE_FORMAT": "YYYY-MM-DD HH:mm:ss"
+  "LOG_MAX_FILES": 10,
+  "DATE_FORMAT": "YYYY-MM-DD",
+  "NETWORK_CHECK_INTERVAL" : 25000
 }

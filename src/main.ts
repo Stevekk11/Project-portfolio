@@ -4,6 +4,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import winston from 'winston'; // not cigarettes⚠️
 import DailyRotateFile from 'winston-daily-rotate-file';
+// @ts-ignore
+import { NetworkMonitor } from './NetworkMonitor';
 
 // Loading the config
 const configPath = path.resolve('./app_config.json');
@@ -50,8 +52,8 @@ const logger = winston.createLogger({
         new DailyRotateFile({
             filename: rotateFilename,
             datePattern: safeDatePattern,
-            maxSize: CONFIG.LOG_MAX_SIZE,
-            maxFiles: CONFIG.LOG_MAX_FILES,
+            maxSize: CONFIG.LOG_MAX_SIZE || '20m',
+            maxFiles: CONFIG.LOG_MAX_FILES || '14',
             zippedArchive: true
         })
     ]
@@ -68,6 +70,8 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 async function startServer() {
     if (!existsSync(CONFIG.ACCOUNTS_DIR)) mkdirSync(CONFIG.ACCOUNTS_DIR);
 
+    const networkMonitor = new NetworkMonitor(logger, CONFIG.NETWORK_CHECK_INTERVAL || 30000);
+    networkMonitor.startMonitoring();
     const server = net.createServer((socket) => {
         const remoteInfo = `${socket.remoteAddress}:${socket.remotePort}`;
         logger.info(`Připojen klient: ${remoteInfo}`);
@@ -79,8 +83,16 @@ async function startServer() {
         });
 
         socket.on('data', async (data) => {
+            socket.write("Zadejte příkaz>\r\n");
             const input = data.toString().trim();
             if (!input) return;
+
+            if (!networkMonitor.checkConnection()) {
+                const errorMsg = "ER Není připojen síťový kabel (příkazy jsou blokovány)\r\n";
+                socket.write(errorMsg);
+                logger.error(`Příkaz zablokován pro ${socket.remoteAddress}: Žádná síť`);
+                return; // Ukončí zpracování, switch se nespustí
+            }
 
             const [command, ...args] = input.split(/\s+/);
             const bankCode = socket.localAddress.replace('::ffff:', '');
@@ -126,7 +138,7 @@ async function startServer() {
                                 }
 
                                 await fs.writeFile(f, newBalance.toString());
-                                socket.write(`${command}\n`);
+                                socket.write(`${command}\r\n`);
                                 logger.info(`${command === 'AD' ? 'Vklad' : 'Výběr'} na účtu ${acc}: ${amount}`);
                             }
                             break;
@@ -140,7 +152,7 @@ async function startServer() {
                                 socket.write(`ER Formát čísla účtu není správný.\n`);
                             } else {
                                 const balance = await fs.readFile(f, 'utf8');
-                                socket.write(`AB ${balance}\n`);
+                                socket.write(`AB ${balance}\r\n`);
                             }
                             break;
                         }
@@ -153,13 +165,13 @@ async function startServer() {
                                 const balance = await fs.readFile(f, 'utf8');
                                 if (balance === "0") {
                                     await fs.unlink(f);
-                                    socket.write(`AR\n`);
+                                    socket.write(`AR\r\n`);
                                     logger.info(`Účet ${acc} smazán.`);
                                 } else {
-                                    socket.write(`ER Nelze smazat bankovní účet na kterém jsou finance.\n`);
+                                    socket.write(`ER Nelze smazat bankovní účet na kterém jsou finance.\r\n`);
                                 }
                             } else {
-                                socket.write(`ER Účet neexistuje.\n`);
+                                socket.write(`ER Účet neexistuje.\r\n`);
                             }
                             break;
                         }
@@ -170,18 +182,25 @@ async function startServer() {
                             for (const file of files) {
                                 total += BigInt(await fs.readFile(path.join(CONFIG.ACCOUNTS_DIR, file), 'utf8'));
                             }
-                            socket.write(`BA ${total.toString()}\n`);
+                            socket.write(`BA ${total.toString()}\r\n`);
                             break;
                         }
 
                         case 'BN': { // Bank Number of clients
                             const files = await fs.readdir(CONFIG.ACCOUNTS_DIR);
-                            socket.write(`BN ${files.length}\n`);
+                            socket.write(`BN ${files.length}\r\n`);
+                            break;
+                        }
+                        case "exit":{
+                            socket.write(`OK Goodbye\r\n`);
+                            networkMonitor.stopMonitoring();
+                            logger.info(`Klient ${remoteInfo} ukončil spojení.`);
+                            socket.end();
                             break;
                         }
 
                         default:
-                            socket.write(`ER Neznámý příkaz\n`);
+                            socket.write(`ER Neznámý příkaz\r\n`);
                     }
                 })(), CONFIG.RESPONSE_TIMEOUT);
 
@@ -190,7 +209,7 @@ async function startServer() {
                 if (err.message === 'TIMEOUT') errMsg = "ER Operace trvala příliš dlouho!";
                 if (err.message === 'LOW_FUNDS') errMsg = "ER Není dostatek finančních prostředků!";
 
-                socket.write(`${errMsg}\n`);
+                socket.write(`${errMsg}\r\n`);
                 logger.error(`Chyba (${remoteInfo}): ${err.message}`);
             }
         });
