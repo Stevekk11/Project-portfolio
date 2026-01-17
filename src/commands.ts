@@ -6,6 +6,32 @@ import { Logger } from 'winston';
 import { NetworkMonitor } from './NetworkMonitor.js';
 
 /**
+ * Pomocná funkce pro přeposlání příkazu jiné bance (proxy).
+ */
+async function proxyCommand(targetIp: string, targetPort: number, commandLine: string, timeoutMs: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const socket = net.createConnection({ host: targetIp, port: targetPort }, () => {
+            socket.write(commandLine + "\r\n");
+        });
+
+        socket.on('data', (data) => {
+            resolve(data.toString().trim());
+            socket.end();
+        });
+
+        socket.on('error', (err) => {
+            reject(err);
+        });
+
+        socket.setTimeout(timeoutMs);
+        socket.on('timeout', () => {
+            socket.destroy();
+            reject(new Error("TIMEOUT"));
+        });
+    });
+}
+
+/**
  * Kontext příkazu obsahující potřebné informace pro jeho vykonání.
  */
 export interface CommandContext {
@@ -55,12 +81,24 @@ export class TransactionCommand implements Command {
     constructor(private type: 'AD' | 'AW') {}
 
     async execute(ctx: CommandContext): Promise<void> {
-        const { socket, args, bankCode, getPath, logger } = ctx;
+        const { socket, args, bankCode, getPath, logger, CONFIG } = ctx;
         const [target, amountStr] = args;
         const [acc, ip] = (target || "").split('/');
+
+        if (ip && ip !== bankCode) {
+            try {
+                const response = await proxyCommand(ip, CONFIG.PORT, `${this.type} ${target} ${amountStr}`, CONFIG.RESPONSE_TIMEOUT);
+                socket.write(`${response}\r\n`);
+            } catch (err: any) {
+                socket.write(`ER Chyba při komunikaci s cizí bankou: ${err.message}\r\n`);
+                logger.error(`Proxy error (${ip}): ${err.message}`);
+            }
+            return;
+        }
+
         const f = getPath(acc);
 
-        if (ip !== bankCode || !existsSync(f) || !/^\d+$/.test(amountStr)) {
+        if (!existsSync(f) || !/^\d+$/.test(amountStr)) {
             socket.write(`ER Špatný formát nebo účet neexistuje.\r\n`);
         } else {
             const balance = BigInt(await fs.readFile(f, 'utf8'));
@@ -86,9 +124,21 @@ export class TransactionCommand implements Command {
  */
 export class BalanceCommand implements Command {
     async execute(ctx: CommandContext): Promise<void> {
-        const { socket, args, getPath } = ctx;
+        const { socket, args, getPath, bankCode, CONFIG, logger } = ctx;
         const [target] = args;
-        const acc = (target || "").split('/')[0];
+        const [acc, ip] = (target || "").split('/');
+
+        if (ip && ip !== bankCode) {
+            try {
+                const response = await proxyCommand(ip, CONFIG.PORT, `AB ${target}`, CONFIG.RESPONSE_TIMEOUT);
+                socket.write(`${response}\r\n`);
+            } catch (err: any) {
+                socket.write(`ER Chyba při komunikaci s cizí bankou: ${err.message}\r\n`);
+                logger.error(`Proxy error (${ip}): ${err.message}`);
+            }
+            return;
+        }
+
         const f = getPath(acc);
         if (!existsSync(f)) {
             socket.write(`ER Formát čísla účtu není správný.\r\n`);
