@@ -1,11 +1,10 @@
 import net from 'node:net';
-import fs from 'node:fs/promises';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import winston from 'winston'; // not cigarettes⚠️
 import DailyRotateFile from 'winston-daily-rotate-file';
-// @ts-ignore
-import { NetworkMonitor } from './NetworkMonitor';
+import { NetworkMonitor } from './NetworkMonitor.js';
+import { commandRegistry, CommandContext } from './commands.js';
 
 // Loading the config
 const configPath = path.resolve('./app_config.json');
@@ -100,107 +99,21 @@ async function startServer() {
 
             try {
                 await withTimeout((async () => {
-                    switch (command) {
-                        case 'BC': // Bank Code
-                            socket.write(`BC ${bankCode}\r\n`);
-                            break;
-
-                        case 'AC': // Account Create
-                            let accNum: number;
-                            let fPath: string;
-                            do {
-                                accNum = Math.floor(Math.random() * 90000) + 10000;
-                                fPath = getPath(accNum.toString());
-                            } while (existsSync(fPath));
-                            await fs.writeFile(fPath, "0");
-                            socket.write(`AC ${accNum}/${bankCode}\r\n`);
-                            logger.info(`Vytvořen účet ${accNum} pro ${remoteInfo}`);
-                            break;
-
-                        case 'AD': // Deposit
-                        case 'AW': { // Withdrawal
-                            const [target, amountStr] = args;
-                            const [acc, ip] = (target || "").split('/');
-                            const f = getPath(acc);
-
-                            if (ip !== bankCode || !existsSync(f) || !/^\d+$/.test(amountStr)) {
-                                socket.write(`ER Špatný formát nebo účet neexistuje.\r\n`);
-                            } else {
-                                const balance = BigInt(await fs.readFile(f, 'utf8'));
-                                const amount = BigInt(amountStr);
-                                let newBalance: bigint;
-
-                                if (command === 'AD') {
-                                    newBalance = balance + amount;
-                                } else {
-                                    if (balance < amount) throw new Error("LOW_FUNDS");
-                                    newBalance = balance - amount;
-                                }
-
-                                await fs.writeFile(f, newBalance.toString());
-                                socket.write(`${command}\r\n`);
-                                logger.info(`${command === 'AD' ? 'Vklad' : 'Výběr'} na účtu ${acc}: ${amount}`);
-                            }
-                            break;
-                        }
-
-                        case 'AB': { // Balance
-                            const [target] = args;
-                            const acc = (target || "").split('/')[0];
-                            const f = getPath(acc);
-                            if (!existsSync(f)) {
-                                socket.write(`ER Formát čísla účtu není správný.\n`);
-                            } else {
-                                const balance = await fs.readFile(f, 'utf8');
-                                socket.write(`AB ${balance}\r\n`);
-                            }
-                            break;
-                        }
-
-                        case 'AR': { // Remove
-                            const [target] = args;
-                            const acc = (target || "").split('/')[0];
-                            const f = getPath(acc);
-                            if (existsSync(f)) {
-                                const balance = await fs.readFile(f, 'utf8');
-                                if (balance === "0") {
-                                    await fs.unlink(f);
-                                    socket.write(`AR\r\n`);
-                                    logger.info(`Účet ${acc} smazán.`);
-                                } else {
-                                    socket.write(`ER Nelze smazat bankovní účet na kterém jsou finance.\r\n`);
-                                }
-                            } else {
-                                socket.write(`ER Účet neexistuje.\r\n`);
-                            }
-                            break;
-                        }
-
-                        case 'BA': { // Bank Amount
-                            const files = await fs.readdir(CONFIG.ACCOUNTS_DIR);
-                            let total = 0n;
-                            for (const file of files) {
-                                total += BigInt(await fs.readFile(path.join(CONFIG.ACCOUNTS_DIR, file), 'utf8'));
-                            }
-                            socket.write(`BA ${total.toString()}\r\n`);
-                            break;
-                        }
-
-                        case 'BN': { // Bank Number of clients
-                            const files = await fs.readdir(CONFIG.ACCOUNTS_DIR);
-                            socket.write(`BN ${files.length}\r\n`);
-                            break;
-                        }
-                        case "exit":{
-                            socket.write(`OK Goodbye\r\n`);
-                            networkMonitor.stopMonitoring();
-                            logger.info(`Klient ${remoteInfo} ukončil spojení.`);
-                            socket.end();
-                            break;
-                        }
-
-                        default:
-                            socket.write(`ER Neznámý příkaz\r\n`);
+                    const handler = commandRegistry.get(command);
+                    if (handler) {
+                        const ctx: CommandContext = {
+                            socket,
+                            args,
+                            bankCode,
+                            getPath,
+                            remoteInfo,
+                            logger,
+                            networkMonitor,
+                            CONFIG
+                        };
+                        await handler.execute(ctx);
+                    } else {
+                        socket.write(`ER Neznámý příkaz\r\n`);
                     }
                 })(), CONFIG.RESPONSE_TIMEOUT);
 
