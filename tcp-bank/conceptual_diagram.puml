@@ -10,8 +10,14 @@ node "Klientská zóna" {
 
 node "Bankovní Server (Node.js)" {
 
-    component "TCP Server (net module) - event loop" as NetLayer
-    component "Command Processor & handler" as Logic
+    component "TCP Server (net module)" as NetLayer
+    component "Network Monitor" as Monitor
+
+    package "Command System (src/commands/)" as Logic {
+        [Command Registry] as Registry
+        [Command Classes] as CmdClasses
+    }
+
     component "Config Manager" as Config
     component "Log Manager (Winston)" as Logger
     component "FileSystem Provider (fs/promises)" as FS
@@ -25,7 +31,8 @@ file "app_config.json" as ConfigFile
 file "bank.log" as LogFile
 
 Client --> NetLayer : TCP/IP (Raw Text utf8)
-NetLayer <--> Logic : Stream dat
+NetLayer <--> Registry : Předání příkazů
+NetLayer --> Monitor : Kontrola sítě
 Logic --> Config : Načítá timeouty/port
 Config ..> ConfigFile : Čte JSON
 
@@ -34,9 +41,10 @@ FS <--> Storage : Čtení/Zápis zůstatku
 Logic --> Logger : Loguje události
 Logger ..> LogFile : Rotující zápis
 
-note right of Logic
-  Zpracovává příkazy:
-  BC, AC, AD, AW, AB, AR, BA, BN
+note right of CmdClasses
+  Modulární struktura:
+  Každý příkaz (BC, AC, AD, AW, AB,
+  AR, BA, BN, exit) má vlastní třídu
 end note
 
 note bottom of Logger

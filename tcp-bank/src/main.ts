@@ -4,7 +4,7 @@ import path from 'node:path';
 import winston from 'winston'; // not cigarettes⚠️
 import DailyRotateFile from 'winston-daily-rotate-file';
 import { NetworkMonitor } from './NetworkMonitor.js';
-import { commandRegistry, CommandContext } from './commands.js';
+import { commandRegistry, CommandContext } from './commands/index.js';
 
 // Loading the config
 const configPath = path.resolve('./app_config.json');
@@ -76,6 +76,7 @@ async function startServer() {
         logger.info(`Připojen klient: ${remoteInfo}`);
         socket.setTimeout(CONFIG.CLIENT_IDLE_TIMEOUT);
         socket.on('timeout', () => {
+            socket.write('ER Odpojeno pro neaktivitu\r\n');
             logger.warn(`Klient ${remoteInfo} odpojen pro neaktivitu.`);
             socket.end();
         });
@@ -94,7 +95,6 @@ async function startServer() {
 
             const [command, ...args] = input.split(/\s+/);
             const bankCode = socket.localAddress.replace('::ffff:', '');
-            const getPath = (acc: string) => path.join(CONFIG.ACCOUNTS_DIR, `${acc}.txt`);
 
             try {
                 await withTimeout((async () => {
@@ -104,7 +104,6 @@ async function startServer() {
                             socket,
                             args,
                             bankCode,
-                            getPath,
                             remoteInfo,
                             logger,
                             networkMonitor,
