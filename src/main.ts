@@ -95,7 +95,6 @@ async function startServer() {
 
             const [command, ...args] = input.split(/\s+/);
             const bankCode = socket.localAddress.replace('::ffff:', '');
-            const getPath = (acc: string) => path.join(CONFIG.ACCOUNTS_DIR, `${acc}.txt`);
 
             try {
                 await withTimeout((async () => {
@@ -105,7 +104,6 @@ async function startServer() {
                             socket,
                             args,
                             bankCode,
-                            getPath,
                             remoteInfo,
                             logger,
                             networkMonitor,
