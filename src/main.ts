@@ -4,7 +4,7 @@ import path from 'node:path';
 import winston from 'winston'; // not cigarettes⚠️
 import DailyRotateFile from 'winston-daily-rotate-file';
 import { NetworkMonitor } from './NetworkMonitor.js';
-import { commandRegistry, CommandContext } from './commands.js';
+import { commandRegistry, CommandContext } from './commands/index.js';
 
 // Loading the config
 const configPath = path.resolve('./app_config.json');

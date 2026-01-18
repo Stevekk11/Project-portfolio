@@ -1,0 +1,69 @@
+@startuml
+!theme plain
+
+title Class Diagram - Bankovní Server
+
+interface Command {
+    +execute(ctx: CommandContext): Promise<void>
+}
+
+interface CommandContext {
+    +socket: net.Socket
+    +args: string[]
+    +bankCode: string
+    +getPath(acc: string): string
+    +remoteInfo: string
+    +logger: Logger
+    +networkMonitor: NetworkMonitor
+    +CONFIG: any
+}
+
+class BankCodeCommand implements Command {
+    +execute(ctx: CommandContext): Promise<void>
+}
+
+class AccountCreateCommand implements Command {
+    +execute(ctx: CommandContext): Promise<void>
+}
+
+class TransactionCommand implements Command {
+    -type: "AD" | "AW"
+    +constructor(type: "AD" | "AW")
+    +execute(ctx: CommandContext): Promise<void>
+}
+
+class BalanceCommand implements Command {
+    +execute(ctx: CommandContext): Promise<void>
+}
+
+class RemoveCommand implements Command {
+    +execute(ctx: CommandContext): Promise<void>
+}
+
+class BankAmountCommand implements Command {
+    +execute(ctx: CommandContext): Promise<void>
+}
+
+class BankClientsCommand implements Command {
+    +execute(ctx: CommandContext): Promise<void>
+}
+
+class ExitCommand implements Command {
+    +execute(ctx: CommandContext): Promise<void>
+}
+
+class NetworkMonitor {
+    -logger: Logger
+    -checkInterval: number
+    -timer: NodeJS.Timeout | null
+    -isConnected: boolean
+    +constructor(logger: Logger, checkIntervalMs: number)
+    +checkConnection(): boolean
+    +startMonitoring(): void
+    +stopMonitoring(): void
+}
+
+CommandContext "1" -- "1" NetworkMonitor : contains
+Command ..> CommandContext : uses in execute()
+
+@enduml
