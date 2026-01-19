@@ -5,6 +5,7 @@
     "dev": "npx tsx src/main.ts",
     "build": "tsc",
     "start": "node dist/main.js",
+    "test": "vitest run",
     "tunnel" : "npx localtunnel --port 65525 --subdomain tcp-bank"
   },
   "dependencies": {
@@ -14,6 +15,7 @@
   },
   "devDependencies": {
     "tsx": "^4.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^4.0.17"
   }
 }
