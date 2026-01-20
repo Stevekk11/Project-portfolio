@@ -1,4 +1,4 @@
-# Bankovní TCP server
+# Bankovní TCP server - Essential
 
 Tento projekt implementuje bankovní server v Node.js pomocí TypeScriptu využívající TCP protokol pro komunikaci.
 
