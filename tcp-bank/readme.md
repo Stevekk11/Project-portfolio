@@ -1,4 +1,6 @@
 # Bankovní TCP server - Essential
+Autor: Štěpán Végh, Leden 2026
+E-Mail: vegh@spsejecna.cz
 
 Tento projekt implementuje bankovní server v Node.js pomocí TypeScriptu využívající TCP protokol pro komunikaci.
 
@@ -29,7 +31,10 @@ Pro spuštění v režimu sledování změn (automatický restart při změně k
 ```bash
 npm run dev
 ```
-
+### Unit testování
+```bash
+npm run test
+```
 # Připojení k serveru
 
 Server naslouchá na IP adrese 0.0.0.0 a port si nastavíte v konfiguraci. Výchozí port je 65525. Nezapomeňte ho změnit na
