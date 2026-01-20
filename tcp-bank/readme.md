@@ -108,3 +108,12 @@ Vlastní chyby: Jelikož jsem to psal „na koleni“, je tam větší šance, �
 v ostrém provozu.
 Dalo to víc práce: Každou drobnost, jako je parsování lomítek v adresách, jsem musel vymyslet, napsat a otestovat úplně
 sám.
+
+### Proč jsem zablokoval příkazy když chybí připojení k internetu? 
+- Aby byly všechny data v aplikaci konzistentní a vyloučily se chyby spojené s ním. 
+### Jaký návrhový vzor jsem použil:
+s ohledem na funkci aplikace a její chování (zpracování příkazů) jsem využil Command. Pro lehké přidávání dalších příkazů a unit testování.
+### Kdo je uživatel? 
+Uživatel aplikace je jakýkoliv klient připojený k serveru této aplikace (putty, nc).
+### Nesrovnalosti (otázky)
+V nejlehčím zadání aplikace s nikým jiným kromě klientů nemusí komunikovat, takže to ztratí význam p2p? 
