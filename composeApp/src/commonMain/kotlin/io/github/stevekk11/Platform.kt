@@ -1,0 +1,7 @@
+package io.github.stevekk11
+
+interface Platform {
+    val name: String
+}
+
+expect fun getPlatform(): Platform
