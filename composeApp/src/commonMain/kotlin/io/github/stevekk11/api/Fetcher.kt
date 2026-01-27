@@ -13,7 +13,6 @@ class Fetcher
         /**
          * Fetch JSON from the API endpoint.
          * @param endpoint The API endpoint URL
-         * @param classSymbol The class symbol (currently unused, but available for future filtering)
          * @return JSON response as string
          */
         suspend fun fetchJsonFromApi(endpoint: String): String
