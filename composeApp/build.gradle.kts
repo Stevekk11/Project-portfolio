@@ -6,7 +6,8 @@ version = "1.0.0"
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
+    // Temporarily disabled Android plugin due to version incompatibility
+    // alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
@@ -16,19 +17,20 @@ plugins {
 }
 
 kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
+    // Temporarily disabled androidTarget due to Android plugin version incompatibility
+    // androidTarget {
+    //     compilerOptions {
+    //         jvmTarget.set(JvmTarget.JVM_11)
+    //     }
+    // }
     
     jvm()
     
     sourceSets {
-        androidMain.dependencies {
-            implementation(libs.compose.uiToolingPreview)
-            implementation(libs.androidx.activity.compose)
-        }
+        // androidMain.dependencies {
+        //     implementation(libs.compose.uiToolingPreview)
+        //     implementation(libs.androidx.activity.compose)
+        // }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
@@ -52,36 +54,37 @@ kotlin {
     }
 }
 
-android {
-    namespace = "io.github.stevekk11"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-
-    defaultConfig {
-        applicationId = "io.github.stevekk11"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-}
-
-dependencies {
-    debugImplementation(libs.compose.uiTooling)
-}
+// Temporarily disabled Android configuration due to plugin version incompatibility
+// android {
+//     namespace = "io.github.stevekk11"
+//     compileSdk = libs.versions.android.compileSdk.get().toInt()
+// 
+//     defaultConfig {
+//         applicationId = "io.github.stevekk11"
+//         minSdk = libs.versions.android.minSdk.get().toInt()
+//         targetSdk = libs.versions.android.targetSdk.get().toInt()
+//         versionCode = 1
+//         versionName = "1.0"
+//     }
+//     packaging {
+//         resources {
+//             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+//         }
+//     }
+//     buildTypes {
+//         getByName("release") {
+//             isMinifyEnabled = false
+//         }
+//     }
+//     compileOptions {
+//         sourceCompatibility = JavaVersion.VERSION_11
+//         targetCompatibility = JavaVersion.VERSION_11
+//     }
+// }
+// 
+// dependencies {
+//     debugImplementation(libs.compose.uiTooling)
+// }
 
 mavenPublishing {
     publishToMavenCentral()
