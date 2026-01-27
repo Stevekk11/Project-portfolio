@@ -109,9 +109,10 @@ class SubstitutionClient
      * @param classSymbol The class symbol to filter (e.g., 'C2b', 'A4')
      * @return List of daily schedules containing only substitutions for the specified class
      */
-    suspend fun parseDailySubstitutionsForClass(classSymbol: String): List<DailySchedule> {
+    suspend fun getDailySubstitutionsForClass(classSymbol: String): List<DailySchedule> {
         val json = Fetcher.fetchJsonFromApi(baseUrl)
         val schedule = SubstitutionParser.parseCompleteSchedule(json)
+
 
         // Filter daily schedules to only include substitutions for the specified class
         return schedule.dailySchedules.map { day ->
