@@ -51,8 +51,8 @@ object SubstitutionParser {
                 value.forEachIndexed { index, element ->
                     val text = element.jsonPrimitive.contentOrNull
                     if (!text.isNullOrBlank()) {
-                        val lesson = parseSubstitutionText(text, index + 1)
-                        lessons.add(lesson)
+                        val lessonsForHour = parseSubstitutionText(text, index + 1)
+                        lessons.addAll(lessonsForHour)
                     }
                 }
                 if (lessons.isNotEmpty()) {
@@ -79,7 +79,32 @@ object SubstitutionParser {
      * 4. Extract Room & Group.
      * 5. Whatever remains is Subject (if short) or Note (if long).
      */
-    fun parseSubstitutionText(text: String, hour: Int): SubstitutedLesson {
+    fun parseSubstitutionText(text: String, hour: Int): List<SubstitutedLesson> {
+        // Check if text contains multiple groups separated by commas
+        val commaParts = text.split(",").map { it.trim() }.filter { it.isNotBlank() }
+
+        // If only one part or no commas, parse as single
+        if (commaParts.size <= 1) {
+            return listOf(parseSingleSubstitutionText(text, hour))
+        }
+
+        // Check if multiple parts have different groups
+        val hasMultipleGroups = commaParts.any { part ->
+            GROUP_REGEX.containsMatchIn(part)
+        } && commaParts.count { GROUP_REGEX.containsMatchIn(it) } > 1
+
+        if (!hasMultipleGroups) {
+            // Multiple parts but same group, parse as single
+            return listOf(parseSingleSubstitutionText(text, hour))
+        }
+
+        // Parse each part separately
+        return commaParts.map { part ->
+            parseSingleSubstitutionText(part, hour)
+        }
+    }
+
+    private fun parseSingleSubstitutionText(text: String, hour: Int): SubstitutedLesson {
         // Clean up newlines and extra spaces immediately
         var workingText = text.replace("\n", " ").trim().replace(Regex("\\s+"), " ")
         val substitutionText = workingText
@@ -105,7 +130,7 @@ object SubstitutionParser {
         // 2. FLAGS: Extract status before they get eaten by Subject/Note
         isDropped = workingText.containsOneOf("odpadá", "0", "odučeno") ||
                 (workingText.contains("oběd", true) && !text.contains("("))
-        isJoined = workingText.containsOneOf("spoj", "joined")
+        isJoined = workingText.containsOneOf("spoj")
         isSeparated = workingText.containsOneOf("rozděl")
         roomChanged = workingText.containsOneOf("změna", "výměna")
         isShifted = workingText.contains("posun", ignoreCase = true)
@@ -118,12 +143,13 @@ object SubstitutionParser {
         }
 
         // 4. TOKENIZATION & CLASSIFICATION
-        // Split by space and remove comma/plus noise
-        val rawTokens = workingText.split(" ")
-            .map { it.replace(",", "").trim() }
+        // Split by space and comma, remove plus noise
+        val rawTokens = workingText.split(Regex("[\\s,]+"))
             .filter { it.isNotEmpty() && it != "+" }
 
         val remainingTokens = mutableListOf<String>()
+        val rooms = mutableListOf<String>()
+        val teachers = mutableListOf<String>()
 
         for (token in rawTokens) {
             when {
@@ -134,27 +160,21 @@ object SubstitutionParser {
                 // Rooms usually start with a digit OR are specific codes like D6/L2
                 token.matches("""(?:uč\.?\s*)?\d+[a-z]{0,2}""".toRegex(RegexOption.IGNORE_CASE)) ||
                         token.matches("""[A-Z]\d+""".toRegex()) -> {
-                    if (room == null) room = token.replace("uč.", "").trim()
-                    else remainingTokens.add(token)
+                    rooms.add(token.replace("uč.", "").trim())
                 }
 
                 // Teacher (2-letter Code)
-                // If it's 2 letters and we don't have a sub teacher yet
+                // If it's 2 letters
                 token.matches("""^[A-Z][a-z]$""".toRegex()) -> {
-                    // Check if it's the subject TV/CH
-                    val isSubjectProbable = token.uppercase() in listOf("TV", "CH", "AJ", "NJ", "MD")
-                    if (substitutingTeacher == null && (!isSubjectProbable || subject != null)) {
-                        substitutingTeacher = token
-                    } else if (subject == null && isSubjectProbable) {
+                    if (subject == null) {
                         subject = token
                     } else {
-                        remainingTokens.add(token)
+                        teachers.add(token)
                     }
                 }
 
                 // Subject (Usually uppercase or first token)
                 subject == null && token.length <= 4 -> subject = token
-
 
                 // Everything else is a note
                 else -> {
@@ -165,6 +185,10 @@ object SubstitutionParser {
                 }
             }
         }
+
+        // Set final values
+        room = rooms.joinToString(",").ifBlank { null }
+        substitutingTeacher = teachers.joinToString(",").ifBlank { null }
 
         // Final cleanup for Subject/Note
         // If subject is "posun" or "spoj", it's not a subject.
@@ -191,7 +215,6 @@ object SubstitutionParser {
         }
 
 
-
         return SubstitutedLesson(
             hour = hour, group = group, subject = subject, room = room,
             substitutingTeacher = substitutingTeacher, missingTeacher = missingTeacher,
@@ -205,4 +228,3 @@ object SubstitutionParser {
         return keywords.any { this.contains(it, ignoreCase = true) }
     }
 }
-
