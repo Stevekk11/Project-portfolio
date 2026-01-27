@@ -1,5 +1,8 @@
 package io.github.stevekk11.dtos
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class SubstitutedLesson(
     val hour: Int,
     val group: String?,
