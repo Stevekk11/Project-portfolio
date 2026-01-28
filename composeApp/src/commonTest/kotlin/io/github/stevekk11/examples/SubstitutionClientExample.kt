@@ -176,7 +176,7 @@ class SubstitutionClientExample {
     suspend fun parseDailySubstitutions() {
         val client = SubstitutionClient()
         client.setEndpointUrl("https://jecnarozvrh.jzitnik.dev/versioned/v1")
-        client.setClassSymbol("A4b")
+        client.setClassSymbol("C4b")
 
         val dailySchedules = client.getDailySubstitutions()
 
