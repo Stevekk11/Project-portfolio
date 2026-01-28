@@ -6,7 +6,8 @@ import kotlinx.serialization.json.*
 object SubstitutionParser {
 
     // --- Regex Constants ---
-    private val PARENTHESES_REGEX = """\(([A-Z][a-z]?)\)""".toRegex() // Matches (Su), (M)
+    private val PARENTHESES_REGEX = """\(([A-Z][a-z]?)(?:,\s*([A-Z][a-z]?))?\)""".toRegex()
+    // Matches (Su), (M)
     private val GROUP_REGEX = """\b\d+/\d+\b""".toRegex() // 1/2, 2/2
 
     fun parseSubstitutionJson(jsonString: String): SubstitutionResponse {
@@ -71,7 +72,7 @@ object SubstitutionParser {
     }
 
     /**
-     * HOLY raškus PARSER STARTS HERE ⛪🪽DO NOT CONTINUE TO KEEP YOUR SANITY⛪
+     * HOLY raškus PARSER STARTS HERE ⛪DO NOT CONTINUE TO KEEP YOUR SANITY⛪
      * Core Parsing Logic
      * Strategy:
      * 1. Extract Flags (odpadá, posun, etc.)
@@ -106,25 +107,27 @@ object SubstitutionParser {
     }
 
     private fun parseSingleSubstitutionText(text: String, hour: Int): SubstitutedLesson {
-        // Clean up newlines and extra spaces immediately
+
         var workingText = text.replace("\n", " ").trim().replace(Regex("\\s+"), " ")
         val substitutionText = workingText
         var group: String? = null
         var subject: String? = null
-        var room: String? = null
-        var substitutingTeacher: String? = null
+        var room: String?
+        var substitutingTeacher: String?
         var missingTeacher: String? = null
-        var isDropped = false
-        var isJoined = false
-        var isSeparated = false
-        var roomChanged = false
-        var isShifted = false
+        var isDropped: Boolean
+        var isJoined: Boolean
+        var isSeparated: Boolean
+        var roomChanged: Boolean
+        var isShifted: Boolean
         var shiftTarget: String? = null
 
         // 1. ANCHOR: Extract Missing Teacher (XX)
         val parenthesesMatch = PARENTHESES_REGEX.find(workingText)
         if (parenthesesMatch != null) {
-            missingTeacher = parenthesesMatch.groupValues[1]
+            val first = parenthesesMatch.groupValues[1]
+            val second = parenthesesMatch.groupValues.getOrNull(2) ?: ""
+            missingTeacher = first + if (second.isNotBlank()) ", $second" else ""
             workingText = workingText.replace(parenthesesMatch.value, " ").trim()
         }
 

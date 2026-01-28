@@ -157,7 +157,7 @@ class SubstitutionClientExample {
 
         // Set valid configuration
         client.setEndpointUrl("https://jecnarozvrh.jzitnik.dev/versioned/v1")
-        client.setClassSymbol("C2b")
+        client.setClassSymbol("E3")
 
         try {
             val substitutions = client.getSubstitutions()
@@ -173,11 +173,11 @@ class SubstitutionClientExample {
     suspend fun parseDailySubstitutions() {
         val client = SubstitutionClient()
         client.setEndpointUrl("https://jecnarozvrh.jzitnik.dev/versioned/v1")
-        client.setClassSymbol("C1a")
+        client.setClassSymbol("A4b")
 
-        val dailySchedules = client.getDailySubstitutionsForClass()
+        val dailySchedules = client.getDailySubstitutions()
 
-        println("Daily substitutions for class C4c:")
+        println("Daily substitutions for class:")
         dailySchedules.forEach { day ->
             println("\nDate: ${day.date} ${if (day.isPriprava) "(Příprava)" else ""}")
             day.classSubs.forEach {

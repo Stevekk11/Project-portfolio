@@ -6,9 +6,10 @@ import io.github.stevekk11.dtos.ScheduleWithAbsences
 import io.github.stevekk11.dtos.SubstitutedLesson
 import io.github.stevekk11.dtos.SubstitutionStatus
 import io.github.stevekk11.parser.SubstitutionParser
+import java.time.LocalDate
 
 /**
- * Client for fetching and parsing substitution data from SPŠE Ječná API.
+ * Client for fetching and parsing substitution data from provided endpoint.
  */
 class SubstitutionClient
 {
@@ -58,6 +59,23 @@ class SubstitutionClient
     }
 
     /**
+     * Get teacher absences for a specific date.
+     * @param date The date as a LocalDate object
+     * @return Teacher absences for the specified date, or null if not found
+     */
+    suspend fun getTeacherAbsences(date: LocalDate): LabeledTeacherAbsences? {
+        val json = Fetcher.fetchJsonFromApi(baseUrl)
+        val schedule = SubstitutionParser.parseCompleteSchedule(json)
+
+        return schedule.dailySchedules.find { it.date == date.toString() }?.let { day ->
+            LabeledTeacherAbsences(
+                date = day.date,
+                absences = day.absences
+            )
+        }
+    }
+
+    /**
      * Get raw JSON data from the substitution API.
      * @return Raw JSON string
      */
@@ -67,7 +85,7 @@ class SubstitutionClient
 
     /**
      * Get substitutions for the configured class symbol.
-     * @return List of substituted lessons for the class across all days
+     * @return List of substituted lessons for the class across all days - unlabeled days
      */
     suspend fun getSubstitutions(): List<SubstitutedLesson> {
         val json = Fetcher.fetchJsonFromApi(baseUrl)
@@ -105,19 +123,15 @@ class SubstitutionClient
     }
 
     /**
-     * Parse daily substitutions for a specific class.
-     * @param classSymbol The class symbol to filter (e.g., 'C2b', 'A4')
-     * @return List of daily schedules containing only substitutions for the specified class
+     * Parse daily substitutions for the configured class symbol.
+     * @return List of daily schedules for the specified class
      */
-    suspend fun getDailySubstitutionsForClass(): List<DailySchedule> {
+    suspend fun getDailySubstitutions(): List<DailySchedule> {
         val json = Fetcher.fetchJsonFromApi(baseUrl)
         val schedule = SubstitutionParser.parseCompleteSchedule(json)
-
-
-        // Filter daily schedules to only include substitutions for the specified class
         return schedule.dailySchedules.map { day ->
             val filteredSubs = day.classSubs.filterKeys { it == classSymbol }
             day.copy(classSubs = filteredSubs)
-        }.filter { it.classSubs.isNotEmpty() }  // Only include days with substitutions for the class
+        }.filter { it.classSubs.isNotEmpty() }
     }
 }

@@ -1,5 +1,5 @@
 group = "io.github.stevekk11"
-version = "1.0.1"
+version = "1.0.2"
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -14,9 +14,9 @@ kotlin {
     
     sourceSets {
         commonMain.dependencies {
-            implementation("io.ktor:ktor-client-core:2.3.12")
-            implementation("io.ktor:ktor-client-cio:2.3.12")
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.kotlinx.serialization.json)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -32,7 +32,7 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
 
-    coordinates(group.toString(), "JecnaSupl", version.toString())
+    coordinates(group.toString(), "jecna-supl", version.toString())
 
     pom {
         name = "JecnaSupl"
