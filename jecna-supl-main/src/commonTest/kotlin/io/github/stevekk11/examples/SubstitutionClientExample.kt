@@ -106,18 +106,7 @@ class SubstitutionClientExample {
                 println("  Class $className (${lessons.size} lessons):")
                 lessons.forEach { lesson ->
                     val info = buildString {
-                        append("    ${lesson.hour}. ")
-                        append(lesson.subject ?: "?")
-                        if (lesson.room != null) append(" (${lesson.room})")
-                        if (lesson.substitutingTeacher != null) {
-                            append(" - ${lesson.substitutingTeacher}")
-                        }
-                        if (lesson.missingTeacher != null) {
-                            append(" for ${lesson.missingTeacher}")
-                        }
-                        if (lesson.isDropped) append(" [DROPPED]")
-                        if (lesson.isJoined) append(" [JOINED]")
-                        if (lesson.isShifted) append(" [SHIFTED]")
+                        append(lesson)
                     }
                     println(info)
                 }
