@@ -10,5 +10,7 @@ DatabaseProject-D1.
 
 tcp-bank.
 
+ai-project.
+
 ## Download the latest releases in the Release tab.
 
