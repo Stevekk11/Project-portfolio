@@ -24,7 +24,7 @@ Tento skript anotuje obrázky z libovolné složky pomocí YOLOv8 modelu a mapuj
 
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt.txt
 ```
 
 **Poznámka:** Instalace PyTorchu a ultralytics může trvat delší dobu v závislosti na vašem systému.
