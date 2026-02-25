@@ -175,8 +175,9 @@ class ImageAnnotator:
 
         # Create class mapping file
         classes_txt_path = os.path.join(output_dir, 'classes.txt')
+        sorted_classes = sorted(set(CLASS_MAPPING.values()))
         with open(classes_txt_path, 'w', encoding='utf-8') as f:
-            for class_name in sorted(set(CLASS_MAPPING.values())):
+            for class_name in sorted_classes:
                 f.write(f"{class_name}\n")
 
         logger.info(f"Saved class names to: {classes_txt_path}")
@@ -210,7 +211,7 @@ class ImageAnnotator:
                 for detection in valid_detections:
                     mapped_class = detection['class_name_mapped']
                     # Find class index from mapping
-                    class_idx = list(sorted(set(CLASS_MAPPING.values()))).index(mapped_class)
+                    class_idx = sorted_classes.index(mapped_class)
 
                     bbox = detection['bbox']
                     x_min, y_min, x_max, y_max = bbox['x_min'], bbox['y_min'], bbox['x_max'], bbox['y_max']
@@ -259,6 +260,15 @@ class ImageAnnotator:
 
         logger.info(f"Created dataset structure in: {output_dir}")
 
+        # Create class mapping file
+        classes_txt_path = os.path.join(output_dir, 'classes.txt')
+        sorted_classes = sorted(set(CLASS_MAPPING.values()))
+        with open(classes_txt_path, 'w', encoding='utf-8') as f:
+            for class_name in sorted_classes:
+                f.write(f"{class_name}\n")
+
+        logger.info(f"Saved class names to: {classes_txt_path}")
+
         # Copy images and create labels
         yolo_results_summary = []
         for result in results:
@@ -292,7 +302,7 @@ class ImageAnnotator:
             with open(label_path, 'w', encoding='utf-8') as f:
                 for detection in valid_detections:
                     mapped_class = detection['class_name_mapped']
-                    class_idx = list(sorted(set(CLASS_MAPPING.values()))).index(mapped_class)
+                    class_idx = sorted_classes.index(mapped_class)
 
                     bbox = detection['bbox']
                     x_min, y_min, x_max, y_max = bbox['x_min'], bbox['y_min'], bbox['x_max'], bbox['y_max']
