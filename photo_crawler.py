@@ -305,4 +305,4 @@ def main(forward=True, url="", max_photos=None):
 
 
 if __name__ == "__main__":
-    main(False,"https://seznam-autobusu.cz/dokumentacka/346388?searchParameters%5BcarOperatorId%5D=106&searchPresenter=Busy%3APhotoList&listUrl=https%3A%2F%2Fseznam-autobusu.cz%2Ffotky%3Fiddopravce%3D106%26strana%3D400#photo", max_photos=300)
+    main(False,"https://seznam-autobusu.cz/dokumentacka/335034?searchParameters%5BcarOperatorId%5D=106&searchPresenter=Busy%3APhotoList&listUrl=https%3A%2F%2Fseznam-autobusu.cz%2Ffotky%3Fiddopravce%3D106%26strana%3D400#photo", max_photos=300)
