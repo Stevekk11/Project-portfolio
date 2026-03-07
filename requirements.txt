@@ -1,6 +1,5 @@
 ultralytics
 opencv-python
-PyYAML
 selenium
 webdriver-manager
 requests

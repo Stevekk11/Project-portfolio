@@ -244,7 +244,7 @@ PyCharmMiscProject/
 ├── create_training_config.py   # Vytvoření YAML
 ├── requirements.txt            # Závislosti
 ├── README_ANNOTATOR.md         # Tato dokumentace
-└── bus_photos_backward/        # Vaše obrázky
+└── bus_photos
 ```
 
 ## Další zdroje
@@ -252,7 +252,9 @@ PyCharmMiscProject/
 Vytvořeno jako nástroj pro anotaci obrázků autobusů a tramvají.
 - [YOLOv8 Dokumentace](https://docs.ultralytics.com)
 - [YOLOv8 Training Guide](https://docs.ultralytics.com/modes/train/)
-- [Roboflow Dataset Tool](https://roboflow.com) - Pro správu dat
+- www.seznam-autobusu.cz - fotky
+- www.zdopravy.cz - nápady
+- www.github.com - version control
 
 ## Poznámky
 
