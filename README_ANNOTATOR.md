@@ -255,6 +255,7 @@ Vytvořeno jako nástroj pro anotaci obrázků autobusů a tramvají.
 - www.seznam-autobusu.cz - fotky
 - www.zdopravy.cz - nápady
 - www.github.com - version control
+- www.foto-busy.eu - další fotky
 
 ## Poznámky
 
