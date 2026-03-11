@@ -49,9 +49,9 @@ def create_dataset_yaml(dataset_path: str, output_name: str = 'dataset.yaml'):
     # Create YAML content
     yaml_content = {
         'path': dataset_path,
-        'train': os.path.join(dataset_path, 'images'),
-        'val': os.path.join(dataset_path, 'images'),  # You can split this later
-        'test': os.path.join(dataset_path, 'images'),  # Optional
+        'train': 'images',
+        'val': 'images',  # You can split this later
+        'test': 'images',  # Optional
         'nc': len(classes),
         'names': classes
     }

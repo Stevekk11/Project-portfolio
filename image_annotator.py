@@ -330,7 +330,8 @@ class ImageAnnotator:
 
     def annotate_folder(self, folder_path: str, save_annotated=True,
                        output_dir=None, save_json=True, save_yolo=True,
-                       create_dataset=False, recursive=False) -> List[Dict]:
+                       create_dataset=False, recursive=False,
+                       skip_existing=False) -> List[Dict]:
         """
         Annotate all images in a folder.
 
@@ -342,6 +343,7 @@ class ImageAnnotator:
             save_yolo: If True, saves annotations in YOLO format for training
             create_dataset: If True, creates complete dataset structure (images + labels)
             recursive: If True, processes subfolders recursively
+            skip_existing: If True, skips images that already have output files
 
         Returns:
             List of results for each image
@@ -356,6 +358,7 @@ class ImageAnnotator:
         logger.info(f"Save YOLO format: {save_yolo}")
         logger.info(f"Create dataset structure: {create_dataset}")
         logger.info(f"Recursive: {recursive}")
+        logger.info(f"Skip existing: {skip_existing}")
 
         # Supported image formats
         image_extensions = {'.jpg', '.jpeg', '.png', '.bmp', '.gif', '.tiff', '.webp'}
@@ -378,6 +381,45 @@ class ImageAnnotator:
             logger.warning(f"No image files found in {folder_path}")
             return []
 
+        if output_dir is None:
+            output_dir = folder_path
+
+        # If skip_existing is True, filter out images that already have output files
+        if skip_existing:
+            original_count = len(image_files)
+            filtered_image_files = []
+            
+            for image_file in image_files:
+                filename = os.path.basename(image_file)
+                name, ext = os.path.splitext(filename)
+                
+                # Check for YOLO label file
+                if save_yolo:
+                    if create_dataset:
+                        label_path = os.path.join(output_dir, 'labels', f"{name}.txt")
+                    else:
+                        label_path = os.path.join(output_dir, 'labels', f"{name}.txt")
+                    
+                    if os.path.exists(label_path):
+                        continue
+                
+                # Check for annotated image
+                if save_annotated:
+                    annotated_path = os.path.join(output_dir, f"{name}_annotated{ext}")
+                    if os.path.exists(annotated_path):
+                        continue
+                
+                filtered_image_files.append(image_file)
+            
+            image_files = filtered_image_files
+            skipped_count = original_count - len(image_files)
+            if skipped_count > 0:
+                logger.info(f"Skipping {skipped_count} already annotated images")
+
+        if not image_files:
+            logger.info("No new images to process")
+            return []
+
         logger.info(f"Found {len(image_files)} images to process")
 
         # Process all images
@@ -387,9 +429,6 @@ class ImageAnnotator:
             result = self.annotate_image(image_file, save_annotated=save_annotated,
                                         output_dir=output_dir)
             results.append(result)
-
-        if output_dir is None:
-            output_dir = folder_path
 
         os.makedirs(output_dir, exist_ok=True)
 
@@ -466,6 +505,9 @@ def main():
     # Get recursive option
     recursive = input("\nProcess subfolders recursively? (y/n): ").strip().lower() == 'y'
 
+    # Get skip existing option
+    skip_existing = input("\nSkip already annotated images? (y/n, default: y): ").strip().lower() != 'n'
+
     # Get model choice
     models = ['yolov8n.pt', 'yolov8s.pt', 'yolov8m.pt', 'yolov8l.pt', 'yolov8x.pt']
     print("\nAvailable models:")
@@ -510,7 +552,8 @@ def main():
             save_json=save_json,
             save_yolo=save_yolo,
             create_dataset=create_dataset,
-            recursive=recursive
+            recursive=recursive,
+            skip_existing=skip_existing
         )
 
         logger.info(f"\nAnnotation complete! Processed {len(results)} images.")
