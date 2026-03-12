@@ -85,7 +85,7 @@ def create_simple_yaml(output_path: str = 'dataset.yaml',
         classes: Dictionary of class_id: class_name
     """
     if classes is None:
-        classes = {0: 'autobus_pid', 1: 'tramvaj_pid'}
+        classes = {0: 'autobus_pid', 1: 'tramvaj_pid', 2: 'other_bus', 3: 'other_tram'}
 
     yaml_content = {
         'train': train_images,
