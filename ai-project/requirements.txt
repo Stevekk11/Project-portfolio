@@ -1,6 +1,7 @@
 ultralytics
 opencv-python
-PyYAML
+pillow
+pyinstaller
 selenium
 webdriver-manager
 requests
