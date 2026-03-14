@@ -137,7 +137,11 @@ class ImageAnnotator:
                 os.makedirs(output_dir, exist_ok=True)
                 filename = os.path.basename(image_path)
                 name, ext = os.path.splitext(filename)
-                annotated_path = os.path.join(output_dir, f"{name}_annotated{ext}")
+                
+                annotated_output_dir = os.path.join(output_dir, 'annotated')
+                os.makedirs(annotated_output_dir, exist_ok=True)
+
+                annotated_path = os.path.join(annotated_output_dir, f"{name}_annotated{ext}")
 
                 # Draw annotations
                 img = cv2.imread(image_path)
@@ -511,6 +515,7 @@ def main():
     # Folders to process
     folders_to_process = [
         ('bus_photos_pid', CLASS_MAPPINGS['pid']),
+        ('tram_photos_other', CLASS_MAPPINGS['other']),
         ('bus_photos_other', CLASS_MAPPINGS['other'])
     ]
 
