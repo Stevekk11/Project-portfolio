@@ -71,7 +71,7 @@ Výstup se uloží do `runs/detect/bus_train_model/`
 from ultralytics import YOLO
 
 # Načtení natrénovaného modelu
-model = YOLO('runs/detect/bus_train_model/weights/best.pt')
+model = YOLO('runs/detect/bus_train_model/weights/trained-model.pt')
 
 # Inference na obrázku
 results = model.predict(source='image.jpg', conf=0.5)
@@ -115,7 +115,7 @@ trainer = YOLOv8Trainer(base_model='yolov8n.pt')
 
 # Predikce na novém obrázku
 results = trainer.predict(
-    model_path='runs/detect/my_bus_model/weights/best.pt',
+    model_path='runs/detect/my_bus_model/weights/trained-model.pt',
     source='new_image.jpg',
     conf=0.5
 )
@@ -212,13 +212,13 @@ from train_model import YOLOv8Trainer
 - **recursive** (bool): Zpracovat podsložky (default: False)
 # Validace
 metrics = trainer.validate(
-    model_path='runs/detect/my_model/weights/best.pt',
+    model_path='runs/detect/my_model/weights/trained-model.pt',
     data_yaml='dataset.yaml'
 )
 
 # Inference
 predictions = trainer.predict(
-    model_path='runs/detect/my_model/weights/best.pt',
+    model_path='runs/detect/my_model/weights/trained-model.pt',
    ```
 3. **Console výstup**: Reálné aktualizace v terminálu
 

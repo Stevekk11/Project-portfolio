@@ -3,7 +3,7 @@ from ultralytics import YOLO
 
 def test_model():
     # Load the trained model
-    model_path = 'best.pt'
+    model_path = 'trained-model.pt'
     if not os.path.exists(model_path):
         print(f"Error: {model_path} not found.")
         return
