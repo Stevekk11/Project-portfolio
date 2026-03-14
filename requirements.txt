@@ -1,5 +1,6 @@
 ultralytics
 opencv-python
+pillow
 selenium
 webdriver-manager
 requests
