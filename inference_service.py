@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from collections import Counter
 from dataclasses import asdict, dataclass
 from datetime import datetime
@@ -48,7 +49,7 @@ class VideoPredictionResult:
 
 class YoloInferenceService:
     def __init__(self, model_path: str | Path, confidence: float = 0.35, iou: float = 0.45):
-        self.model_path = Path(model_path).expanduser().resolve()
+        self.model_path = resolve_runtime_path(model_path)
         if not self.model_path.exists():
             raise FileNotFoundError(f"Model nebyl nalezen: {self.model_path}")
 
@@ -261,9 +262,63 @@ class YoloInferenceService:
         raise RuntimeError("Nepodařilo se vytvořit video writer pro výstupní soubor.")
 
 
+def get_runtime_base_dir() -> Path:
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).resolve().parent
+    return Path(__file__).resolve().parent
+
+
+def get_bundle_data_dir() -> Path | None:
+    bundle_dir = getattr(sys, "_MEIPASS", None)
+    return Path(bundle_dir).resolve() if bundle_dir else None
+
+
+def resolve_runtime_path(path: str | Path, base_dir: str | Path | None = None) -> Path:
+    candidate = Path(path).expanduser()
+    if candidate.is_absolute():
+        return candidate.resolve()
+
+    search_dirs: list[Path] = []
+    if base_dir is not None:
+        search_dirs.append(Path(base_dir).expanduser().resolve())
+
+    bundle_dir = get_bundle_data_dir()
+    if bundle_dir is not None:
+        search_dirs.append(bundle_dir)
+
+    search_dirs.extend([get_runtime_base_dir(), Path.cwd().resolve()])
+
+    unique_dirs: list[Path] = []
+    for directory in search_dirs:
+        if directory not in unique_dirs:
+            unique_dirs.append(directory)
+
+    for directory in unique_dirs:
+        resolved_candidate = (directory / candidate).resolve()
+        if resolved_candidate.exists():
+            return resolved_candidate
+
+    return (unique_dirs[0] / candidate).resolve() if unique_dirs else candidate.resolve()
+
+
 def discover_model_files(base_dir: str | Path) -> list[str]:
-    directory = Path(base_dir).expanduser().resolve()
-    return sorted(str(path) for path in directory.glob("*.pt"))
+    search_dirs = [Path(base_dir).expanduser().resolve(), get_runtime_base_dir(), Path.cwd().resolve()]
+    bundle_dir = get_bundle_data_dir()
+    if bundle_dir is not None:
+        search_dirs.insert(1, bundle_dir)
+
+    discovered: list[str] = []
+    seen: set[Path] = set()
+    for directory in search_dirs:
+        if not directory.exists():
+            continue
+        for path in directory.glob("*.pt"):
+            resolved = path.resolve()
+            if resolved not in seen:
+                seen.add(resolved)
+                discovered.append(str(resolved))
+
+    return sorted(discovered)
 
 
 def is_image_file(path: str | Path) -> bool:

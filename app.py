@@ -17,6 +17,7 @@ from inference_service import (
     SUPPORTED_VIDEO_EXTENSIONS,
     YoloInferenceService,
     discover_model_files,
+    get_runtime_base_dir,
     is_image_file,
     is_video_file,
 )
@@ -32,7 +33,7 @@ class YoloDetectionApp:
         self.root.geometry("1280x840")
         self.root.minsize(1100, 760)
 
-        self.project_dir = Path(__file__).resolve().parent
+        self.project_dir = get_runtime_base_dir()
         self.output_dir_default = self.project_dir / "gui_outputs"
         self.output_dir_default.mkdir(exist_ok=True)
 
@@ -58,7 +59,7 @@ class YoloDetectionApp:
         self._action_buttons: list[ttk.Button] = []
         self._build_style()
         self._build_layout()
-        self.root.after(100, lambda: self._poll_progress_queue())
+        self.root.after(100, self._poll_progress_queue, None)
 
     def _build_style(self) -> None:
         style = ttk.Style()
@@ -357,7 +358,7 @@ class YoloDetectionApp:
                 self.cached_service_key = key
             return self.cached_service
 
-    def _poll_progress_queue(self) -> None:
+    def _poll_progress_queue(self, _tick=None) -> None:
         try:
             while True:
                 item = self.progress_queue.get_nowait()
@@ -365,7 +366,7 @@ class YoloDetectionApp:
         except queue.Empty:
             pass
         finally:
-            self.root.after(100, lambda: self._poll_progress_queue())
+            self.root.after(100, self._poll_progress_queue, None)
 
     def _handle_queue_item(self, item: tuple) -> None:
         kind = item[0]

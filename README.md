@@ -33,6 +33,22 @@ pip install -r requirements.txt
 python app.py
 ```
 
+## Build přenositelného `.exe`
+
+Pro Windows je připravený build přes `PyInstaller`.
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+.\build.ps1
+```
+
+Výstup najdeš zde:
+
+- portable složka: `dist\YOLODetectionStudio\`
+- hlavní spustitelný soubor: `dist\YOLODetectionStudio\YOLODetectionStudio.exe`
+
+Poznámka: build je záměrně ve variantě **one-dir**, protože je spolehlivější pro `torch`, `opencv` a větší YOLO modely než single-file build. Pro přenesení na jiný počítač kopíruj celou složku `dist\YOLODetectionStudio\`.
+
 ## Smoke test backendu
 
 ```powershell
