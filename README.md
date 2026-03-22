@@ -32,6 +32,14 @@ pip install -r requirements.txt
 python app.py
 ```
 
+## Testování
+
+Aplikace obsahuje unit testy pro ověření základní funkcionality pomocných skriptů. Testy můžete spustit pomocí modulu `unittest`:
+
+```powershell
+python -m unittest discover tests
+```
+
 ## Build přenositelného `.exe`
 
 Pro Windows je připravený build přes `PyInstaller`.
