@@ -1,0 +1,3 @@
+Obrázky: Copyright (c) https://seznam-autobusu.cz/, https://www.prazsketramvaje.cz/
+Základ modelu: Copyright (c) https://ultralytics.com, Licencováno pod AGPLv3
+Trénování v google colab: https://colab.research.google.com/drive/1uO-K2Vj9xXHmaCZ3q3KXL6zgFSfJdAu3?usp=sharing
