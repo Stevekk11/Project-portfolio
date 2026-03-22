@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumentace - YOLO Detection Studio</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
+        h1, h2, h3 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .info-box { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .info-box p { margin: 5px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #fff; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        code { background: #e8ecef; padding: 2px 5px; border-radius: 3px; font-family: Consolas, monospace; }
+        pre { background: #2d3436; color: #dfe6e9; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        .diagram { text-align: center; margin: 30px 0; background: white; padding: 20px; border: 1px dashed #3498db; }
+        .image-gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin: 20px 0; }
+        .image-item { text-align: center; max-width: 45%; }
+        .image-item img { max-width: 100%; height: auto; border-radius: 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border: 1px solid #ddd; }
+        .image-caption { font-size: 0.9em; color: #555; margin-top: 8px; font-style: italic; }
+        .footer { text-align: center; margin-top: 50px; font-size: 0.9em; color: #7f8c8d; }
+    </style>
+</head>
+<body>
+
+    <h1>Dokumentace projektu: YOLO Detection Studio</h1>
+
+    <div class="info-box">
+        <h2>Základní informace</h2>
+        <p><strong>Autor:</strong> Štěpán Végh</p>
+        <p><strong>Třída:</strong> C4b</p>
+        <p><strong>E-mail:</strong> vegh@spsejecna.cz</p>
+        <p><strong>Datum vypracování:</strong> 20. března 2026</p>
+        <p><strong>Škola:</strong> SPŠE Ječná, Praha 2</p>
+        <p><em>Jedná se o školní projekt v rámci předmětu Programové vybavení.</em></p>
+    </div>
+
+    <section>
+        <h2>1. Specifikace požadavků</h2>
+        <h3>Funkční požadavky (Functional Requirements)</h3>
+        <ul>
+            <li><strong>Detekce objektů v obraze:</strong> Uživatel může nahrát obrázek a nechat v něm detekovat objekty (autobusy, tramvaje) pomocí YOLO modelu.</li>
+            <li><strong>Zpracování videa:</strong> Aplikace umožňuje sekvenční detekci v jednotlivých snímcích videa a uložení výsledného videa s anotacemi.</li>
+            <li><strong>Volba modelu:</strong> Možnost vybrat si libovolný natrénovaný model ve formátu <code>.pt</code>.</li>
+            <li><strong>Nastavení parametrů:</strong> Uživatel může v reálném čase měnit Confidence threshold a IOU threshold.</li>
+            <li><strong>Export dat:</strong> Automatické generování JSON metadat s podrobnými informacemi o každé detekci.</li>
+            <li><strong>Webový crawler:</strong> Součástí je skript pro automatické stahování obrázků pro trénování z dopravních galerií.</li>
+        </ul>
+        <h3>Business Requirements</h3>
+        <ul>
+            <li>Poskytnout intuitivní GUI pro uživatele, kteří neumí ovládat Python skripty v terminálu.</li>
+            <li>Urychlit proces sběru a přípravy dat pro trénování modelů detekce vozidel PID.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>2. Architektura aplikace</h2>
+        <p>Aplikace je postavena na architektuře oddělující uživatelské rozhraní od logiky zpracování dat (Inference).</p>
+        
+        <h3>Komponenty a jejich vazby (Big Image)</h3>
+        <div class="diagram">
+            [ GUI (Tkinter) ] <--> [ Progress Queue ] <--> [ Background Worker (Threading) ]
+                                                            |
+                                                            v
+                                            [ YoloInferenceService (Backend) ]
+                                                            |
+                                                +-----------+-----------+
+                                                |                       |
+                                        [ Ultralytics YOLO ]     [ OpenCV / Pillow ]
+        </div>
+
+        <h3>Popis částí:</h3>
+        <ul>
+            <li><strong>GUI (lib/app.py):</strong> Hlavní třída <code>YoloDetectionApp</code> spravuje okno, widgety a uživatelské vstupy. Využívá <code>threading</code> pro běh inference na pozadí, aby UI nezamrzalo.</li>
+            <li><strong>Service Layer (lib/inference_service.py):</strong> Třída <code>YoloInferenceService</code> zapouzdřuje knihovnu Ultralytics a poskytuje metody pro predikci nad obrazy a videem.</li>
+            <li><strong>Data Models:</strong> Použití <code>dataclasses</code> (Detection, ImagePredictionResult) pro strukturované předávání výsledků.</li>
+            <li><strong>Helper Scripts:</strong> <code>src/image_resizer.py</code> a <code>src/create_training_config.py</code> slouží k přípravě trénovacích sad.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>3. Popis běhu aplikace (Behavior)</h2>
+        <h3>Typický scénář: Detekce v obrázku</h3>
+        <ol>
+            <li>Uživatel spustí aplikaci a vybere model (např. <code>trained-model.pt</code>).</li>
+            <li>Uživatel přepne na záložku "Obrázek" a vybere soubor <code>vstup.jpg</code>.</li>
+            <li>Po kliknutí na "Detekovat" aplikace:
+                <ul>
+                    <li>Zvaliduje vstupy.</li>
+                    <li>Vytvoří instanci <code>YoloInferenceService</code> (pokud už neexistuje).</li>
+                    <li>Spustí pracovní vlákno, které zavolá metodu <code>predict_image</code>.</li>
+                    <li>GUI zobrazí "Zpracovávám..." a zablokuje tlačítka.</li>
+                </ul>
+            </li>
+            <li>Backend (YOLO) provede výpočet, uloží anotovaný obrázek do <code>gui_outputs/</code> a vygeneruje JSON.</li>
+            <li>Po dokončení vlákno pošle výsledek do fronty (Queue), GUI jej vyzvedne, zobrazí náhledy a statistiky v Treeview.</li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>4. Rozhraní, knihovny a závislosti</h2>
+        <p>Aplikace využívá následující knihovny třetích stran:</p>
+        <table>
+            <tr>
+                <th>Knihovna</th>
+                <th>Verze (přibl.)</th>
+                <th>Účel</th>
+            </tr>
+            <tr>
+                <td><code>ultralytics</code></td>
+                <td>Latest</td>
+                <td>Jádro pro YOLOv8/v11 inferenci.</td>
+            </tr>
+            <tr>
+                <td><code>opencv-python</code></td>
+                <td>4.x</td>
+                <td>Zpracování obrazu, kreslení boxů, práce s videem.</td>
+            </tr>
+            <tr>
+                <td><code>tkinter</code></td>
+                <td>Standard</td>
+                <td>Uživatelské rozhraní (součást Pythonu).</td>
+            </tr>
+            <tr>
+                <td><code>selenium</code></td>
+                <td>4.x</td>
+                <td>Webový crawler pro sběr dat.</td>
+            </tr>
+            <tr>
+                <td><code>PyYAML</code></td>
+                <td>6.x</td>
+                <td>Generování konfiguračních souborů pro trénování.</td>
+            </tr>
+            <tr>
+                <td><code>requests</code></td>
+                <td>2.x</td>
+                <td>Stahování souborů v crawleru.</td>
+            </tr>
+        </table>
+    </section>
+
+    <section>
+        <h2>5. Právní a licenční aspekty</h2>
+        <ul>
+            <li><strong>Licence projektu:</strong> GNU Affero General Public License v3.0 (AGPL-3.0). Viz soubor <code>LICENSE</code>.</li>
+            <li><strong>Autorská práva:</strong> 
+                <ul>
+                    <li>Kód aplikace: Štěpán Végh.</li>
+                    <li>Základ YOLO modelů: Ultralytics Inc. (AGPLv3).</li>
+                    <li>Testovací obrázky v dokumentaci/trénovací sadě: autorská práva náleží webům seznam-autobusu.cz a prazsketramvaje.cz (použito pro studijní účely).</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>6. Konfigurace a instalace</h2>
+        <h3>Instalace</h3>
+        <pre>
+git clone [URL projektu]
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+        </pre>
+        <h3>Spuštění</h3>
+        <p>Příkazem: <code>python lib/app.py</code> (nebo z kořene přes skript/IDE).</p>
+        <h3>Konfigurace</h3>
+        <p>Aplikace nemá externí config soubor, veškeré nastavení probíhá v GUI:</p>
+        <ul>
+            <li><strong>Cesta k výstupu:</strong> Výchozí je <code>gui_outputs/</code>, lze změnit v poli "Výstupní složka".</li>
+            <li><strong>Thresholds:</strong> Nastavitelné posuvníky (0.0 - 1.0).</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>7. Chybové stavy a jejich řešení</h2>
+        <table>
+            <tr>
+                <th>Chyba / Kód</th>
+                <th>Příčina</th>
+                <th>Řešení</th>
+            </tr>
+            <tr>
+                <td><code>FileNotFoundError</code> (Model)</td>
+                <td>Chybí soubor .pt v adresáři models.</td>
+                <td>Zkontrolujte, zda model existuje nebo jej vyberte přes "Procházet".</td>
+            </tr>
+            <tr>
+                <td><code>ModuleNotFoundError</code></td>
+                <td>Nejsou nainstalovány knihovny.</td>
+                <td>Spusťte <code>pip install -r requirements.txt</code>.</td>
+            </tr>
+            <tr>
+                <td><code>RuntimeError</code> (Video Write)</td>
+                <td>Chybějící kodeky v systému (FFmpeg).</td>
+                <td>Backend zkusí fallback na .avi. Pokud selže, nainstalujte OpenH264 nebo FFmpeg.</td>
+            </tr>
+            <tr>
+                <td>Crawler: <code>TimeoutException</code></td>
+                <td>Pomalý internet nebo změna struktury webu.</td>
+                <td>Zkontrolujte připojení, zvyšte parametr delay v kódu crawleru.</td>
+            </tr>
+        </table>
+    </section>
+
+    <section>
+        <h2>8. Testování a validace</h2>
+        <p>Projekt obsahuje sadu unit testů v adresáři <code>tests/</code>.</p>
+
+        <div class="image-gallery">
+            <div class="image-item">
+                <img src="../img/results.png" alt="Graf výsledků trénování">
+                <div class="image-caption">Obrázek 1: Vizualizace výsledků trénování YOLO modelu (loss, mAP).</div>
+            </div>
+            <div class="image-item">
+                <img src="../img/labels.jpg" alt="Distribuce labelů">
+                <div class="image-caption">Obrázek 2: Distribuce a velikosti detekovaných tříd v trénovací sadě.</div>
+            </div>
+        </div>
+
+        <ul>
+            <li><strong>test_image_resizer.py:</strong> Ověřuje správnou změnu velikosti obrázků.</li>
+            <li><strong>test_create_training_config.py:</strong> Testuje generování YAML souborů.</li>
+            <li><strong>test_model_inference.py:</strong> Validuje funkčnost inference (načtení modelu a detekce).</li>
+            <li><strong>test_photo_crawler.py:</strong> Ověřuje stahování obrázků pomocí Selenium.</li>
+        </ul>
+        <p><strong>Výsledky:</strong> Testy byly spouštěny lokálně i v CI prostředí. Všechny klíčové komponenty procházejí validací (Green status).</p>
+    </section>
+
+    <section>
+        <h2>9. Seznam verzí a známé chyby</h2>
+        <ul>
+            <li><strong>v1.0.0 (Aktuální):</strong> První stabilní verze s GUI a crawlerem.</li>
+            <li><strong>Známé chyby:</strong>
+                <ul>
+                    <li>Při zavření okna během zpracování videa může zůstat proces viset v paměti (řeší se <code>daemon=True</code> vlákny).</li>
+                    <li>Preview velkých videí může mírně lagovat UI při rychlém překreslování.</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>10. Přílohy a import/export</h2>
+        <ul>
+            <li><strong>Import:</strong> Aplikace přijímá standardní formáty obrazu (JPG, PNG) a videa (MP4, AVI).</li>
+            <li><strong>Export:</strong> 
+                <ul>
+                    <li>Anotovaný obraz: Kopie originálu s vykreslenými boxy.</li>
+                    <li>JSON metadata: Obsahuje pole <code>detections</code> se souřadnicemi <code>xmin, ymin, xmax, ymax</code> a <code>confidence</code>.</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <div class="footer">
+        <p>&copy; 2026 Štěpán Végh | Školní projekt YOLO Detection Studio</p>
+    </div>
+
+</body>
+</html>

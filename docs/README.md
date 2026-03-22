@@ -34,11 +34,17 @@ python app.py
 
 ## Testování
 
-Aplikace obsahuje unit testy pro ověření základní funkcionality pomocných skriptů. Testy můžete spustit pomocí modulu `unittest`:
+Aplikace obsahuje unit testy pro ověření základní funkcionality pomocných skriptů, včetně YOLO inference a webového crawleru. Testy můžete spustit pomocí modulu `unittest`:
 
 ```powershell
 python -m unittest discover tests
 ```
+
+Jednotlivé testy lze spustit i samostatně:
+- `python -m unittest tests/test_image_resizer.py`
+- `python -m unittest tests/test_create_training_config.py`
+- `python -m unittest tests/test_model_inference.py`
+- `python -m unittest tests/test_photo_crawler.py`
 
 ## Build přenositelného `.exe`
 
