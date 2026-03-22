@@ -50,8 +50,8 @@ def create_dataset_yaml(dataset_path: str, output_name: str = 'dataset.yaml'):
     yaml_content = {
         'path': dataset_path,
         'train': 'images',
-        'val': 'images',  # You can split this later
-        'test': 'images',  # Optional
+        'val': 'images',
+        'test': 'images',
         'nc': len(classes),
         'names': classes
     }

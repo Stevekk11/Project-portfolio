@@ -514,7 +514,7 @@ def main():
 
     # Folders to process
     folders_to_process = [
-        ('bus_photos_pid', CLASS_MAPPINGS['pid']),
+        ('bus_tram_photos_pid', CLASS_MAPPINGS['pid']),
         ('tram_photos_other', CLASS_MAPPINGS['other']),
         ('bus_photos_other', CLASS_MAPPINGS['other'])
     ]
