@@ -1,4 +1,4 @@
-# YOLO Detekční aplikace
+# Detekční aplikace autobusů a tramvají
 
 Desktop GUI aplikace v Pythonu pro pohodlné spouštění YOLO detekce nad obrázky i videem.
 
